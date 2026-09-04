@@ -4,6 +4,7 @@ Timer = require("libraries.hump.timer")
 Camera = require("libraries.STALKER-X.Camera")
 Utils = require("libraries.general.utils")
 Physics = require("libraries.windfield")
+Json = require("libraries.general.json")
 
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')

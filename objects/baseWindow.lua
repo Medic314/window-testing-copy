@@ -17,7 +17,7 @@ function pWindow:update(dt)
 
     if input:pressed('lmb') then
         if self.colliders[1] then
-            Focus = self.id
+            updateFocus(self.id)
             self.MX2, self.MY2 = GMX - self.x, GMY - self.y
         end
     end

@@ -13,15 +13,21 @@ function pWindow:new(area, x, y, opts)
 
     self.images = {ST.placeholder, ST.placeholder2, ST.placeholder3}
     self.selectedimage = 1
+
+    self.collider = self.area.world:newRectangleCollider(self.x, self.y-50, self.bounds.x, self.bounds.y+50)
+    self.collider:setCollisionClass("Window")
+    self.collider:setType('static')
+    self.collider:setObject(self)
+    self.collider.id = self.id
 end
 
 function pWindow:update(dt)
+    self.collider:setPosition(self.x+self.bounds.x/2, self.y+self.bounds.y/2)
     if Focus == self.id then self.layer = "main layer" else self.layer = 'background' end
     self.colliders = self.area.world:queryRectangleArea(self.x, self.y-50, self.bounds.x, self.bounds.y+50, {'Mouse'})
 
     if input:pressed('lmb') then
         if self.colliders[1] then
-            Focus = self.id
             self.MX2, self.MY2 = GMX - self.x, GMY - self.y
         end
     end

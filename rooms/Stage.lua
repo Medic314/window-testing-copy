@@ -12,6 +12,8 @@ end
 function Stage:init()
     GMX, GMY = 0, 0
     Focus = nil
+    
+   FocusHis = {}
 
     input:bind('up', 'up')
     input:bind('down', 'down')
@@ -30,6 +32,7 @@ function Stage:init()
     input:bind('4', '4')
 
     self.area.world:addCollisionClass('Mouse')
+    self.area.world:addCollisionClass('Window')
 
     --self.area:addGameObject('Window', 0, 0)
     self.area:addGameObject('Mouse', 0, 0)
@@ -37,7 +40,30 @@ function Stage:init()
     self.area:addGameObject('Button', 200, 200)
     self.area:addGameObject('Button', 300, 200, {type='p'})
     self.area:addGameObject('Button', 400, 200, {type='m'})
+    self.area:addGameObject('Button', 500, 200, {type='g'})
 end
+
+function findFocus(id)
+    for i, v in ipairs(FocusHis) do
+        if v == id then
+            return i
+        end
+    end
+    return 0
+end
+
+function updateFocus(id)
+    Focus = id
+    for i, v in ipairs(FocusHis) do
+        if v == id then
+            table.remove(FocusHis, i)
+        end
+    end
+    table.insert(FocusHis, Focus)
+    for i=1, #FocusHis do print(FocusHis[i],  findFocus(FocusHis[i])) end
+    print("")
+end
+
 
 function Stage:update(dt)
     self.area:update(dt)

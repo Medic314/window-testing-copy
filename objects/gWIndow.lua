@@ -1,26 +1,41 @@
-tWindow = GameObject:extend()
+gWindow = GameObject:extend()
 
-function tWindow:new(area, x, y, opts)
-    tWindow.super.new(self, area, x, y, opts)
+function gWindow:new(area, x, y, opts)
+    gWindow.super.new(self, area, x, y, opts)
     self.layer = 'background'
     self.x = gw/2
     self.y = gh/2
     love.graphics.setFont(ST.f.alphabeta)
     self.charsize = 16
-    self.bounds = {x = 800, y = 400}
-    self.text = opts.text or TT.placeholder.ptext1
+    self.imagesize = 400
+    self.bounds = {x = 800, y = 600}
+    self.text = ""
     self.lines = self:wrapText(self.text, self.bounds.x)
     self.dragging = false
     self.scroll = 0
 
-    self.collider = self.area.world:newRectangleCollider(self.x, self.y, self.bounds.x+25, self.bounds.y+16)
-    self.collider:setCollisionClass("Window")
-    self.collider:setType('static')
-    self.collider:setObject(self)
-    self.collider.id = self.id
+    self.images = {ST.placeholder, ST.placeholder2, ST.placeholder3}
+    self.selectedimage = 1
+
+    self.gif = nil
+    local apikey = 'ZFgQBkNpLLlmc1ahEWWiNYJNtFput9mA'
+
+    local apiURL = 'https://api.giphy.com/v1/gifs/random?api_key=' .. apikey
+    local response = io.popen('curl --location --fail --silent --show-error "' .. apiURL .. '" 2>&1')
+        local json = response:read('*a')
+        response:close()
+        --print(json)
+        local t, dJson = pcall(Json.decode, json)
+        if t and dJson.data and dJson.data.title then
+            if dJson.data and dJson.data.embed_url then
+                self.text = "Opening " .. dJson.data.title .. " [] Loading " .. dJson.data.embed_url .. "..."
+                self.lines = self:wrapText(self.text, self.bounds.x)
+                love.system.openURL(dJson.data.embed_url)
+            end
+        end
 end
 
-function tWindow:wrapText(text, maxWidth)
+function gWindow:wrapText(text, maxWidth)
     local font = love.graphics.getFont()
     local lines = {}
     local currentLine = ""
@@ -56,8 +71,7 @@ function tWindow:wrapText(text, maxWidth)
     return lines
 end
 
-function tWindow:update(dt)
-    self.collider:setPosition(self.x+self.bounds.x/2, self.y+self.bounds.y/2)
+function gWindow:update(dt)
     if Focus == self.id then self.layer = "main layer" else self.layer = 'background' end
     local font = love.graphics.getFont()
     local textH = #self.lines * font:getHeight()
@@ -70,6 +84,12 @@ function tWindow:update(dt)
 
     if input:pressed('lmb') then
         if self.colliders[1] then
+            updateFocus(self.id)
+            --[[self.colliders2 = self.area.world:queryRectangleArea(self.x, self.y, self.bounds.x+25, self.bounds.y+16, {'Window'})
+            if self.colliders2[1] then
+                for i=1, #self.colliders2 do
+                    if findFocus(self.id) > findFocus(self.colliders2[i].id)  then]]
+
             self.MX2, self.MY2 = GMX - self.x, GMY - self.y
         end
     end
@@ -124,7 +144,7 @@ function tWindow:update(dt)
     if self.bounds.y > 1500 then self.bounds.y = 1500 end
 end
 
-function tWindow:draw()
+function gWindow:draw()
     love.graphics.setColor(0, 0, 0)
     love.graphics.rectangle('fill', self.x, self.y, self.bounds.x+25, self.bounds.y+16)
     love.graphics.setColor(1, 1, 1)

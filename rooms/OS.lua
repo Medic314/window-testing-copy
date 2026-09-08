@@ -1,17 +1,19 @@
-Stage = Object:extend()
+OS = Object:extend()
 
-function Stage:new()
-    
+function OS:new()
     Debug_Vision = true
     self.area = Area(self)
     self.main_canvas = love.graphics.newCanvas(gw, gh)
     self.area:addPhysicsWorld()
     self:init()
-    CamX, CamY = 0,0
+    CamX, CamY = gw/2,gh/2
 end
 
-function Stage:init()
+function OS:init()
     GMX, GMY = 0, 0
+    Focus = nil
+    
+    FocusHis = {}
 
     input:bind('up', 'up')
     input:bind('down', 'down')
@@ -22,14 +24,6 @@ function Stage:init()
     input:bind('s', 'down')
     input:bind('a', 'left')
     input:bind('d', 'right')
-    input:bind('w', 'directional_input')
-    input:bind('a', 'directional_input')
-    input:bind('s', 'directional_input')
-    input:bind('d', 'directional_input')
-    input:bind('up', 'directional_input')
-    input:bind('down', 'directional_input')
-    input:bind('left', 'directional_input')
-    input:bind('right', 'directional_input')
     input:bind('wheelup','upscroll')
     input:bind('wheeldown','downscroll')
     input:bind('1', '1')
@@ -37,15 +31,40 @@ function Stage:init()
     input:bind('3', '3')
     input:bind('4', '4')
 
-    input:bind('0', function() gotoRoom('OS') end)
+    self.area.world:addCollisionClass('Mouse')
+    self.area.world:addCollisionClass('Window')
 
-    self.area.world:addCollisionClass('Player')
-
-    self.area:addGameObject('Cali', 0, 0)
+    --self.area:addGameObject('Window', 0, 0)
+    self.area:addGameObject('Mouse', 0, 0)
+    self.area:addGameObject('Background', 0, 0)
+    self.area:addGameObject('Button', 200, 200)
+    self.area:addGameObject('Button', 300, 200, {type='p'})
+    self.area:addGameObject('Button', 400, 200, {type='m'})
+    --self.area:addGameObject('Button', 500, 200, {type='g'})
 end
 
+function findFocus(id)
+    for i, v in ipairs(FocusHis) do
+        if v == id then
+            return i
+        end
+    end
+    return 0
+end
 
-function Stage:update(dt)
+function updateFocus(id)
+    Focus = id
+    for i, v in ipairs(FocusHis) do
+        if v == id then
+            table.remove(FocusHis, i)
+        end
+    end
+    table.insert(FocusHis, Focus)
+    for i=1, #FocusHis do print(FocusHis[i],  findFocus(FocusHis[i])) end
+    print("")
+end
+
+function OS:update(dt)
     self.area:update(dt)
     if not paused then
         timer:update(dt)
@@ -55,7 +74,7 @@ function Stage:update(dt)
     end
 end
 
-function Stage:draw()
+function OS:draw()
     love.graphics.setCanvas(self.main_canvas)
     love.graphics.clear()
     

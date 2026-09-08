@@ -18,6 +18,11 @@ function tWindow:new(area, x, y, opts)
     self.collider:setType('static')
     self.collider:setObject(self)
     self.collider.id = self.id
+    self.colliderWidth = self.bounds.x
+    self.colliderHeight = self.bounds.y
+
+    updateFocus(self.id)
+    self.MX2, self.MY2 = GMX - self.x, GMY - self.y
 end
 
 function tWindow:wrapText(text, maxWidth)
@@ -122,6 +127,17 @@ function tWindow:update(dt)
     if self.bounds.y < 300 then self.bounds.y = 300 end
     if self.bounds.x > 1500 then self.bounds.x = 1500 end
     if self.bounds.y > 1500 then self.bounds.y = 1500 end
+
+    if self.bounds.x ~= self.colliderWidth or self.bounds.y ~= self.colliderHeight then
+        self.collider:destroy()
+        self.collider = self.area.world:newRectangleCollider(self.x, self.y, self.bounds.x+25, self.bounds.y+16)
+        self.collider:setCollisionClass("Window")
+        self.collider:setType('static')
+        self.collider:setObject(self)
+        self.collider.id = self.id
+        self.colliderWidth = self.bounds.x
+        self.colliderHeight = self.bounds.y
+    end
 end
 
 function tWindow:draw()

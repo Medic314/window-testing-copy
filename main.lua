@@ -16,7 +16,11 @@ function love.load()
     requireFiles(room_files)
     
     local object_files = {}
-    recursiveEnumerate('objects', object_files)
+    recursiveEnumerate('objects/OS', object_files)
+    requireFiles(object_files)
+
+    local object_files = {}
+    recursiveEnumerate('objects/Stage', object_files)
     requireFiles(object_files)
 
     timer = Timer()
@@ -28,7 +32,7 @@ function love.load()
 
     current_room = nil
     gotoRoom('Stage')
-    resize(0.625)
+    --resize(0.625)
 end
 
 function love.update(dt)
@@ -67,3 +71,4 @@ function requireFiles(files)
         require(file)
     end
 end
+ 

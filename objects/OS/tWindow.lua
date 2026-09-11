@@ -80,7 +80,7 @@ function tWindow:update(dt)
     end
     if input:released('lmb') then
         if self.closebuttondown then
-            timer:after(0.2, function() self.closebuttondown = 0 self.dead = true end)
+            timer:after(0.2, function() self.closebuttondown = 0 self.dead = true FocusHis[findFocus(self.id)] = nil end)
         end
         if self.dragging then self.dragging = false end
     end

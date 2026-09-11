@@ -71,4 +71,3 @@ function requireFiles(files)
         require(file)
     end
 end
- 

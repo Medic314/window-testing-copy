@@ -1,7 +1,6 @@
 Stage = Object:extend()
 
 function Stage:new()
-    
     Debug_Vision = true
     self.area = Area(self)
     self.main_canvas = love.graphics.newCanvas(gw, gh)
@@ -12,6 +11,7 @@ end
 
 function Stage:init()
     GMX, GMY = 0, 0
+    CR, PR = 'main', nil
 
     input:bind('up', 'up')
     input:bind('down', 'down')
@@ -37,13 +37,18 @@ function Stage:init()
     input:bind('3', '3')
     input:bind('4', '4')
 
+    input:bind('e', 'interact')
+    input:bind('space', 'next')
+
     input:bind('0', function() gotoRoom('OS') end)
 
     self.area.world:addCollisionClass('Player')
+    self.area.world:addCollisionClass('Terrain')
+    self.area.world:addCollisionClass('Interactable')
 
     self.area:addGameObject('Cali', 0, 0)
+    self.area:addGameObject('prRooms', 0, 0, {rid=CR})
 end
-
 
 function Stage:update(dt)
     self.area:update(dt)

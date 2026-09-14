@@ -26,14 +26,19 @@ function Computer:update(dt)
     if Cull == self.idr then
         self.dead = true
     end
-    self.icollider.distance = math.sqrt(((PlayerX-self.X)^2) + ((PlayerY-self.Y)^2))
+    self.icollider.distance = math.sqrt(((PlayerX-(self.X+self.W/2))^2) + ((PlayerY-(self.Y+self.H/2))^2))
 
     if self.icollider.interacted then
         gotoRoom('OS')
+        SaveState = {
+            PX = PlayerX,
+            PY = PlayerY,
+            Room = CurrentRoom,
+        }
     end
 end
 
 function Computer:draw()
     love.graphics.rectangle('line', self.X, self.Y, self.W, self.H)
-    love.graphics.line(self.X, self.Y, PlayerX, PlayerY)
+    love.graphics.line(self.X+self.W/2, self.Y+self.H/2, PlayerX, PlayerY)
 end

@@ -12,6 +12,12 @@ end
 function Stage:init()
     GMX, GMY = 0, 0
     CR, PR = 'main', nil
+    Camerascroll = false
+
+    if SaveState then
+        PX, PY = SaveState.PX, SaveState.PY
+        CR = SaveState.Room
+    end
 
     input:bind('up', 'up')
     input:bind('down', 'down')
@@ -55,8 +61,14 @@ function Stage:update(dt)
     if not paused then
         timer:update(dt)
         camera:update(dt)
-
-        camera:follow(CamX, CamY)
+        local MX, MY = love.mouse.getPosition()
+        MX = MX - gw / 2
+        MY = MY - gh / 2
+        if Camerascroll then
+            camera:follow(PlayerX+MX/32, PlayerY+MY/32)
+        else
+            camera:follow(0+MX/32, 0+MY/32)
+        end
     end
 end
 

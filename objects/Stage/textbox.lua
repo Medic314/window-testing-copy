@@ -4,8 +4,8 @@ function Textbox:new(area, x, y, opts)
     Textbox.super.new(self, area, x, y, opts)
     self.layer = 'foreground'
     --self.x, self.y = camera:toWorldCoords(x, y)
-    self.w, self.h = gw-gw/6, gh/3
-    self.x, self.y = x-self.w/2, y+self.h/3
+    self.w, self.h = gw-gw/6, gh/4
+    self.x, self.y = x-self.w/2, y+self.h/1.5
     movelock, inputlock = true, true
 
     love.graphics.setFont(ST.f.alphabetaBig)
@@ -68,7 +68,7 @@ function Textbox:update(dt)
 end
 
 function Textbox:draw()
-    love.graphics.rectangle('line', self.x, self.y, self.w, self.h)
+    love.graphics.rectangle('line', self.x-50, self.y-50, self.w+100, self.h+100)
 
     love.graphics.setFont(ST.f.alphabetaBig)
     local font = love.graphics.getFont()

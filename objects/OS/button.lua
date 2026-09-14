@@ -18,7 +18,9 @@ end
 function Button:update(dt)
     if input:pressed('lmb') then
         self.collider = self.area.world:queryRectangleArea(self.x, self.y, self.w, self.h, {'Mouse'})
-        if self.collider[1] then
+        if self.type == 'e' then
+            gotoRoom('Stage')
+        elseif self.collider[1] then
             self.area:addGameObject(self.type .. 'Window', self.x, self.y)
         end
     end

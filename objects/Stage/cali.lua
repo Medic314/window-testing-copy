@@ -3,8 +3,8 @@ Cali = GameObject:extend()
 function Cali:new(area, x, y, opts)
     Cali.super.new(self, area, x, y, opts)
     self.layer = 'main layer'
-    self.X = x
-    self.Y = y
+    self.X = PX or x
+    self.Y = PY or y
     
     self.W, self.H = (76/1.25)*1.25, (122/1.25)*1.25
     self.DX, self.DY = 0, 0

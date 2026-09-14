@@ -40,6 +40,7 @@ function OS:init()
     self.area:addGameObject('Button', 200, 200)
     self.area:addGameObject('Button', 300, 200, {type='p'})
     self.area:addGameObject('Button', 400, 200, {type='m'})
+    self.area:addGameObject('Button', 600, 200, {type='e'})
     --self.area:addGameObject('Button', 500, 200, {type='g'})
 end
 

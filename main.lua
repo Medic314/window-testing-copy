@@ -33,6 +33,7 @@ function love.load()
     current_room = nil
     gotoRoom('Stage')
     --resize(0.625)
+    SaveState = nil
 end
 
 function love.update(dt)

@@ -19,7 +19,7 @@ end
 
 function Cali:update(dt)
     self.X, self.Y = PlayerX, PlayerY
-    self.A = 300
+    self.A = 250
 
     self.LX, self.LY = self.X, self.Y
 
@@ -45,7 +45,7 @@ function Cali:update(dt)
     self.Y = self.Y + self.DY
     PlayerX, PlayerY = self.X, self.Y
     if input:pressed("interact") then
-        self.icolliders = self.area.world:queryCircleArea(self.X, self.Y, self.W*2, {'Interactable'})
+        self.icolliders = self.area.world:queryCircleArea(self.X, self.Y, self.W*1.5, {'Interactable'})
         local LDO
         if #self.icolliders > 1 then
             local LD = 99999
@@ -65,7 +65,7 @@ end
 
 function Cali:draw()
     love.graphics.rectangle('line', self.X-self.W/2, self.Y-self.H/2, self.W, self.H)
-    love.graphics.circle('line', self.X, self.Y, self.W*2)
+    love.graphics.circle('line', self.X, self.Y, self.W*1.5)
 end
     
     

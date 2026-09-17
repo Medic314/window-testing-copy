@@ -22,19 +22,21 @@ function prRooms:new(area, x, y, opts)
         self.area:addGameObject('Texttester', -300, -300, {idr = self.id, textline = {TT.main.mtext3, TT.main.mtext32, TT.main.mtext33}})
         self.area:addGameObject('Texttester', -100, -300, {idr = self.id, textline = {TT.main.mtext4}})
         self.area:addGameObject('Computer', 300, 300, {idr = self.id})
-        self.area:addGameObject('Door', 600, 0, {room = 'hallway', idr=self.id})
+        self.area:addGameObject('FolderT', 400, 300, {idr = self.id})
+        self.area:addGameObject('Door', 600, 0, {room = 'hallway', idr=self.id, position = {-((1920*0.8)/2)+300, 0}})
     elseif self.rid == 'hallway' then
         Camerascroll = true
         self.area:addGameObject('Wall', -((1920*0.8)/2), -((1080*0.8)/2), {w=50, h=(1080*0.8), idr=self.id})
-        self.area:addGameObject('Wall', ((1920*1.2)/2)-50, -((1080*0.8)/2), {w=50, h=(1080*0.8), idr=self.id})
-        self.area:addGameObject('Wall', -((1920*0.8)/2), -((1080*0.6)/2), {w=(1920*1.2), h=50, idr=self.id})
-        self.area:addGameObject('Wall', -((1920*0.8)/2), ((1080*0.6)/2)-50, {w=(1920*1.2), h=50, idr=self.id})
+        self.area:addGameObject('Wall', ((1920*1)/2)-50, -((1080*0.8)/2), {w=50, h=(1080*0.8), idr=self.id})
+        self.area:addGameObject('Wall', -((1920*0.8)/2), -((1080*0.4)/2), {w=(1920*1), h=50, idr=self.id})
+        self.area:addGameObject('Wall', -((1920*0.8)/2), ((1080*0.4)/2)-50, {w=(1920*1), h=50, idr=self.id})
 
-        self.area:addGameObject('Door', -500+150, ((1080*0.6)/2)-50, {room = 'ATroom', idr=self.id})
-        self.area:addGameObject('Door', 0+150, ((1080*0.6)/2)-50, {room = 'TSroom', idr=self.id})
-        self.area:addGameObject('Door', 500+150, ((1080*0.6)/2)-50, {room = 'Rroom', idr=self.id})
+        self.area:addGameObject('Door', -500+150, ((1080*0.4)/2)-50, {room = 'ATroom', idr=self.id})
+        self.area:addGameObject('Door', 0+150, ((1080*0.4)/2)-50, {room = 'TSroom', idr=self.id})
+        self.area:addGameObject('Door', 500+150, ((1080*0.4)/2)-50, {room = 'Rroom', idr=self.id})
 
-        self.area:addGameObject('Door', -500, 0, {room = 'main', idr=self.id})
+        self.area:addGameObject('Door', -((1920*0.8)/2), 0, {room = 'main', idr=self.id, position = {((1920*0.8)/2)-350, 0}})
+        
     elseif self.rid == 'closet' then
     elseif self.rid == 'stairs' then
     elseif self.rid == 'ATroom' then

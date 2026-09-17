@@ -4,8 +4,8 @@ function Textbox:new(area, x, y, opts)
     Textbox.super.new(self, area, x, y, opts)
     self.layer = 'foreground'
     --self.x, self.y = camera:toWorldCoords(x, y)
-    self.w, self.h = gw-gw/6, gh/4
-    self.x, self.y = x-self.w/2, y+self.h/1.5
+    self.w, self.h = gw-gw/6, gh/5
+    self.x, self.y = x-self.w/2, y+self.h/1
     movelock, inputlock = true, true
 
     love.graphics.setFont(ST.f.alphabetaBig)
@@ -55,6 +55,7 @@ function Textbox:wrapText(text, maxWidth)
 end
 
 function Textbox:update(dt)
+    self.x, self.y = camera.x-self.w/2, camera.y+self.h/1
     if input:pressed('next') then
         self.selectedtext = self.selectedtext + 1
         if self.selectedtext > #self.textline then
@@ -68,6 +69,9 @@ function Textbox:update(dt)
 end
 
 function Textbox:draw()
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.rectangle('fill', self.x-50, self.y-50, self.w+100, self.h+100)
+    love.graphics.setColor(1, 1, 1)
     love.graphics.rectangle('line', self.x-50, self.y-50, self.w+100, self.h+100)
 
     love.graphics.setFont(ST.f.alphabetaBig)

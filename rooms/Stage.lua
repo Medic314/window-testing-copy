@@ -67,7 +67,7 @@ function Stage:update(dt)
         if Camerascroll then
             camera:follow(PlayerX+MX/32, PlayerY+MY/32)
         else
-            camera:follow(0+MX/32, 0+MY/32)
+            camera:follow(0+MX/(32*2), 0+MY/(32*2))
         end
     end
 end

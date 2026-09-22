@@ -30,10 +30,16 @@ function Door:update(dt)
     end
     self.icollider.distance = math.sqrt(((PlayerX-(self.X+self.W/2))^2) + ((PlayerY-(self.Y+self.H/2))^2))
 
-    if self.icollider.interacted then
-        doorPulse = self.room
-        if self.position then
-            PlayerX, PlayerY = self.position[1], self.position[2]
+    if not doorlock then
+        if self.icollider.interacted then
+            self.area:addGameObject('Transition', 0, 0)
+            timer:after(0.15, function()
+            doorPulse = self.room
+            if self.position then
+                PlayerX, PlayerY = self.position[1], self.position[2]
+            end
+        end
+        )
         end
     end
 end

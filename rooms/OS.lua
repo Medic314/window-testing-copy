@@ -42,6 +42,8 @@ function OS:init()
     self.area:addGameObject('Button', 400, 200, {type='m'})
     self.area:addGameObject('Button', 600, 200, {type='e'})
     --self.area:addGameObject('Button', 500, 200, {type='g'})
+    
+    self.area:addGameObject('Transition', 0, 0, {type = 'room'})
 end
 
 function findFocus(id)

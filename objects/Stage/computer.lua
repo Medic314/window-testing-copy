@@ -1,6 +1,9 @@
 Computer = GameObject:extend()
 
 function Computer:new(area, x, y, opts)
+
+    --OUTDATED
+
     Computer.super.new(self, area, x, y, opts)
     self.layer = 'main layer'
     self.X = x
@@ -33,7 +36,7 @@ function Computer:update(dt)
         SaveState = {
             PX = PlayerX,
             PY = PlayerY,
-            Room = CurrentRoom,
+            Room = currentRoom,
         }
     end
 end

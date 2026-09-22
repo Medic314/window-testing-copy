@@ -11,6 +11,7 @@ end
 
 function Folders:init()
     GMX, GMY = 0, 0
+    filelock = false
 
     input:bind('up', 'up')
     input:bind('down', 'down')
@@ -42,6 +43,8 @@ function Folders:init()
     self.area:addGameObject('Folder', 550, 50)
 
     self.area:addGameObject('Fbutton', 1600, 50)
+
+    self.area:addGameObject('Transition', 0, 0, {type = 'room'})
 end
 
 function Folders:update(dt)

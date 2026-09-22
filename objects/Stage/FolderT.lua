@@ -1,6 +1,9 @@
 FolderT = GameObject:extend()
 
 function FolderT:new(area, x, y, opts)
+
+    --OUTDATED
+
     FolderT.super.new(self, area, x, y, opts)
     self.layer = 'main layer'
     self.X = x
@@ -33,7 +36,7 @@ function FolderT:update(dt)
         SaveState = {
             PX = PlayerX,
             PY = PlayerY,
-            Room = CurrentRoom,
+            Room = currentRoom,
         }
     end
 end

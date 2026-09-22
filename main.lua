@@ -11,6 +11,8 @@ function love.load()
     love.graphics.setLineStyle('rough')
     math.randomseed(os.time())
 
+    ATDoorlock, TDoorlock, RDoorlock = false, false, false
+
     local room_files = {}
     recursiveEnumerate('rooms', room_files)
     requireFiles(room_files)
@@ -30,14 +32,36 @@ function love.load()
     timer = Timer()
     input = Input() 
     camera = Camera()
-    camera:setFollowLerp(0.1)
+    camera:setFollowLerp(0.1) 
 
     paused = false 
 
     current_room = nil
+    --resize(0.625)
+    
+    local filename = 'GameSave.json'
+    
+    if love.filesystem.getInfo(filename) then
+        local contents = love.filesystem.read(filename)
+        SaveState = Json.decode(contents) or nil
+    end
+
     gotoRoom('Stage')
-    --resize(0.625) 
-    SaveState = nil
+    
+    function SaveGame(SaveState)
+        local filename = 'GameSave.json'
+        local info = {}
+        
+        if love.filesystem.getInfo(filename) then
+            local contents = love.filesystem.read(filename)
+            info = Json.decode(contents) or {}
+        end
+        
+        info = SaveState
+        
+        local encoded = Json.encode(info, { indent = true })
+        love.filesystem.write(filename, encoded)
+    end
 end
 
 function love.update(dt)

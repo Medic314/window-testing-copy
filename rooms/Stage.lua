@@ -17,6 +17,7 @@ function Stage:init()
     if SaveState then
         PX, PY = SaveState.PX, SaveState.PY
         CR = SaveState.Room
+        print(PX, PY, CR)
     end
 
     input:bind('up', 'up')
@@ -54,6 +55,8 @@ function Stage:init()
 
     self.area:addGameObject('Cali', 0, 0)
     self.area:addGameObject('prRooms', 0, 0, {rid=CR})
+    
+    self.area:addGameObject('Transition', 0, 0, {type = 'room'})
 end
 
 function Stage:update(dt)
@@ -62,6 +65,9 @@ function Stage:update(dt)
         timer:update(dt)
         camera:update(dt)
         local MX, MY = love.mouse.getPosition()
+        if input:pressed('lmb') then
+            print(camera:toWorldCoords(MX, MY))
+        end
         MX = MX - gw / 2
         MY = MY - gh / 2
         if Camerascroll then

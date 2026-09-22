@@ -4,6 +4,12 @@ TT = {
         ptext2 = "I met a traveller from an antique land Who said: Two vast and trunkless legs of stone Stand in the desert. Near them on the sand, Half sunk, a shatter'd visage lies, whose frown And wrinkled lip and sneer of cold command Tell that its sculptor well those passions read Which yet survive, stamp'd on these lifeless things, The hand that mock'd them and the heart that fed. And on the pedestal these words appear: 'My name is Ozymandias, king of kings: Look on my works, ye Mighty, and despair!' Nothing beside remains: round the decay Of that colossal wreck, boundless and bare, The lone and level sands stretch far away.",
         ptext3 = "Hello, welcome. Why don’t you take a seat? Get comfortable, relax, take a second if you need to. Now what’s bothering you? Well, why don’t we start at the beginning? Growing up, how was your relationship with the fundamentals of conscious existence? Did you have xenon orchid sinews spilling down the outer center of your blooming Escher/Mandelbrot head? And how about claustrophilic tendrils clapping caskets closed on seven-knuckle thumbs, did you get along well with the Gideon Bugler pineal glands, your projector eyes casting sci-fi’s on your STR’d strands? Tell me about your nerve to steal nerves of steel from under Bacchus’ bloody nose. Did Namibian Himbas tie-dye you, your ears pierced with a Phineas Gage flagpole, did you die before your day? Thursday traction, Tuesday titration. My hope is to assess through my objective report of your subjective conjecture whether this proprietary blend of expertise and seasoning works as well as this transorbital ice pick Holistic ballistics, you got a better idea? It’s about the best idea we could come up with. What you think ideas spread because they’re good — no, they spread because people like them. So here we are once again holding, as it were, a mirror up to your mirror. I guess it’s just something people do",
         ptext4 = "Verse 1 []  Marching on the capital with molotovs in hand [] Or WatchMojo's top 15 1990’s punk rock bands [] Community can help you to be your realest self [] Or learn to tie a noose and you can DIY yourself []  Chorus [[]] Cause it's a coin flip [] Its a kick flip [] It's a battle for the brain, an intercontinental competition [] Coin flip, it's a kick flip [] Ask me 'bout my future plans I'll flip that silver dollar in my hand [[]]  Verse 2 [] Bed rotting weekends only technically alive [] Distractions fill your brain to pretend everything is fine [] When it comes to building connections I build 'em all with purpose [] Or should we call them bridges cause [] I'll always burn it [[]]  Verse 3 [] I don't mind oh me oh my [] When I'm stuck alone no place to go no one to call my own no no no [] I don't mind oh me oh my [] Except when lows are high I wanna die and days that end in 'Y' [[]]  Chorus [] Cause it's a coin flip [] It's a kick flip [] It's a battle for the brain, an intercontinental competition [] Coin flip [] It’s a kick flip [] Ask me 'bout my future plans I'll flip that silver dollar in my hand [[]]  Verse 4 [] Some days it seems like everything's on fire or its poisoned [] Some days it seems like I can scream and raise up all our voices [] I don't know how or what or why I'm gonna do tomorrow [] But if you're feeling good you got some serotonin I can borrow? [[]]  Verse 5 [] I'm bouncing back from life and death [] Eating words I've never said [] Manic panic fight the feds [] Get the fuck out of my head [] Impulsive urges pop up when you least desire [] Power surges watch me blow it even higher [] Impulsive urges pop up when you least desire [] Power surges watch me blow it even higher [[]]  Chorus [] Cause it's a coin flip [] It's a kick flip [] It's a battle for the brain, an intercontinental competition [] Coin flip [] It's a kick flip [] Ask me 'bout my future plans I'll flip that silver dollar in my hand",
+        ptextopt = {"OPTION DIALOGUE TEXT WAGH WAGH WAGH WAGH WAGH WAGH WAGH WAGH WAGH WAGH WAGH WAGH ", 'WAGH', 'WAGH2'},
+        ptextopt11 = "Textline 1, no question",
+        ptextopt12 = "Textline 1, again",
+        ptextopt21 = {"TEXtLINE2", 'WHAT', 'AAAAA'},
+        ptextopt22 = "Textline 2p1",
+        ptextopt23 = "Textline 2p2",
     },
     main = {
         mtext1 = "[[A-AN OLD COFFEE MACHINE. THERE ARE S-STILL STAINS AT THE BOTTOM OF THE GLASS JAR.]] [] [[ITS WENT U-UNUSED FOR QUITE SOME TIME, OBVIOUSLY.]]",
@@ -12,5 +18,24 @@ TT = {
         mtext32 = "Blah blah blah im sam and im SUPID WAGHHHGHHGHHGHHHHGHH",
         mtext33 = "[[WOW!]]",
         mtext4 = "[[SOMETHING DUDE I-IDK]]",
+        mtext5 = "[[POSTERRRRRR]]",
+        mtext6 = "[[A T-TRASH CAN.]]",
+    },
+    hallway = {
+        htext1 = '[[IT\'S LOCKED.]]',
+        htext2 = '[[BEST N-NOT WHILE SHE\'S HERE.]]',
+        htext3 = '[[BEST N-NOT WHILE HE\'S HERE.]]',
+    },
+    closet = {
+        ctext1 = '[[A FILE CABINET, FILLED WITH FILES USUALLY RESERVED FOR THE HIGHER UPS. IVE NEVER SEEN THESE B-BEFORE...]]',
+        ctext12 = '[[THIS ONE SEEMS TO CONTAIN ME A-AND MY ELITE\'S BASE INFORMATION.]]',
+        ctext13 = {'[[SEARCH THROUGH THIS CABINET?]]', "YES", "NO"},
+        ctext2 = '[[A FILE CABINET, FILLED WITH FILES USUALLY RESERVED FOR THE HIGHER UPS. IVE NEVER SEEN THESE B-BEFORE...]]',
+        ctext22 = '[[THIS ONE SEEMS TO CONTAIN OTHER INFORMATION ABOUT THE REGIMENT, AND OLD LOGS FROM THE HIGHER UPS.]]',
+        ctext23 = {'[[SEARCH THROUGH THIS CABINET?]]', "YES", "NO"},
+    },
+    croom = {
+        ctext1 = '[[MY COMPANY MANDATED PERSONAL COMPUTER.]]',
+        ctext12 = {'[[LOG IN?]]', "YES", "NO"},
     },
 }

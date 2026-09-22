@@ -57,7 +57,9 @@ function Cali:update(dt)
             end
             if LDO then LDO.interacted = true end
         elseif self.icolliders[1] then
-            self.icolliders[1].interacted = true
+            if not inputlock then
+                self.icolliders[1].interacted = true
+            end
         end
     end
 

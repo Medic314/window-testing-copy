@@ -1,6 +1,6 @@
 ST = {
     f = {
-        alphabeta = love.graphics.newFont("assets/alphbeta.ttf", 26),
+        alphabeta = love.graphics.newFont("assets/alphbeta.ttf", 32),
         alphabetaBig = love.graphics.newFont("assets/alphbeta.ttf", 56),
     },
     placeholder = love.graphics.newImage('assets/400x400.png'),

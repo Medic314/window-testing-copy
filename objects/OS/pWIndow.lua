@@ -24,7 +24,7 @@ function pWindow:new(area, x, y, opts)
 end
 
 function pWindow:update(dt)
-    self.collider:setPosition(self.x+self.bounds.x/2, self.y+self.bounds.y/2)
+    self.collider:setPosition(self.x+self.bounds.x/2, self.y+(self.bounds.y+50)/2)
     if Focus == self.id then self.layer = "main layer" else self.layer = 'background' end
     self.colliders = self.area.world:queryRectangleArea(self.x, self.y-50, self.bounds.x, self.bounds.y+50, {'Mouse'})
 

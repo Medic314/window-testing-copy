@@ -6,14 +6,18 @@ function Texttester:new(area, x, y, opts)
     self.X = x
     self.Y = y
     
-    self.W, self.H = 50, 50
+    self.W = opts.w or 50
+    self.H = opts.h or 50
     self.idr = opts.idr or self.id
     self.textline = opts.textline or nil
+    self.c = opts.c or true
 
-    self.collider = self.area.world:newRectangleCollider(self.X, self.Y, self.W, self.H)
-    self.collider:setCollisionClass("Terrain")
-    self.collider:setType('static')
-    self.collider:setObject(self)
+    if self.c == true then 
+        self.collider = self.area.world:newRectangleCollider(self.X, self.Y, self.W, self.H)
+        self.collider:setCollisionClass("Terrain")
+        self.collider:setType('static')
+        self.collider:setObject(self)
+    end
 
     self.icollider = self.area.world:newRectangleCollider(self.X, self.Y, self.W, self.H)
     self.icollider:setCollisionClass("Interactable")

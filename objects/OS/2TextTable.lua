@@ -25,6 +25,13 @@ TT = {
         htext1 = '[[IT\'S LOCKED.]]',
         htext2 = '[[BEST N-NOT WHILE SHE\'S HERE.]]',
         htext3 = '[[BEST N-NOT WHILE HE\'S HERE.]]',
+        htext4 = '[[AN EMPTY SHELF.]]',
+        htext5 = '[[R-RHENIUM\'S POTTED PLANT, I S-SEE HIM OUT HERE WATERING IT EVERY DAY.]] [] [[WHERE HE GETS W-WATER IS BEYOND ME.]]',
+        htext52 = '[[ITS NAME IS \"LIL\' R\", ACCORDING TO H-HIM]]',
+        htext6 = '[[ONE OF ARCTREADS VESTS.]] [] [[THEY\'RE ACTUALLY F-FULL COATS, JUST WITH THE ARMS RIPPED O-OFF.]]',
+        htext7 = '[[A MOTIVATIONAL POSTER, NOT FROM P-PIKE]]',
+        htext72 = '[[IT DEPICTS AN AN-ANTHROPOMORPHIC OCEAN WAVE WITH THE T-TEXT \"SEAS THE DAY\"]]',
+        htext73 = '[[ITS EMBARASSING TO A-ADMIT IT MAKES M-ME CHUCKLE EVERY TIME.]]',
     },
     closet = {
         ctext1 = '[[A FILE CABINET, FILLED WITH FILES USUALLY RESERVED FOR THE HIGHER UPS. IVE NEVER SEEN THESE B-BEFORE...]]',
@@ -35,7 +42,13 @@ TT = {
         ctext23 = {'[[SEARCH THROUGH THIS CABINET?]]', "YES", "NO"},
     },
     croom = {
-        ctext1 = '[[MY COMPANY MANDATED PERSONAL COMPUTER.]]',
+        ctext1 = '[[MY COMPANY MANDATED P-PERSONAL COMPUTER.]]',
         ctext12 = {'[[LOG IN?]]', "YES", "NO"},
+        ctext2 = '[[A BOX FILLED OF W-WIRES AND OTHER DITRITUS, PROVES VERY USEFUL.]]',
+        ctext3i = love.graphics.newImage('assets/1920x1080.png'),
+        ctext31 = '[[ITS THE WINDOW ITS THE WINDOW WINDOW WINDOW WINDOW]]',
+        ctext4 = '[[MY REFUELING STATION, I D-DON\'T REQUIRE IT RIGHT N-NOW]]',
+        ctext5 = '[[target]]',
+        ctext6 = '[[papers]]',
     },
 }

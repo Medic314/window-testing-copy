@@ -33,7 +33,7 @@ function prRooms:new(area, x, y, opts)
         self.area:addGameObject('Wall', 225, -125, {w=450, h=300, idr=self.id})
         --self.area:addGameObject('Computer', 300, 300, {idr = self.id})
         --self.area:addGameObject('FolderT', 400, 300, {idr = self.id})
-        self.area:addGameObject('Door', ((1920*0.8)/2)-50, -300, {room = 'hallway', idr=self.id, position = {-((1920*0.8)/2)+300, 0}})
+        self.area:addGameObject('Door', ((1920*0.8)/2)-50, -300, {room = 'hallway', idr=self.id, position = {-((1920*0.8)/2)+125, 0+25}})
         self.area:addGameObject('Door', -700, -((1080*0.8)/2), {room = 'stairs', idr=self.id, position = {550, 325-150}})
         self.area:addGameObject('Door', -605, ((1080*0.8)/2)-50, {room = 'closet', idr=self.id, position = {0+50, -315+125}})
         self.area:addGameObject('Door', -200, ((1080*0.8)/2)-50, {room = 'Croom', idr=self.id, position = {0, -432+100}})
@@ -44,8 +44,17 @@ function prRooms:new(area, x, y, opts)
         self.area:addGameObject('Wall', ((1920*1)/2)-50, -((1080*0.4)/2), {w=50, h=(1080*0.4), idr=self.id})
         self.area:addGameObject('Wall', -((1920*0.8)/2), -((1080*0.4)/2), {w=(1920*0.9), h=50, idr=self.id})
         self.area:addGameObject('Wall', -((1920*0.8)/2), ((1080*0.4)/2)-50, {w=(1920*0.9), h=50, idr=self.id})
+
+        self.area:addGameObject('Texttester', ((1920*1)/2)-225, -((1080*0.4)/2)+50, {idr = self.id, w=150, h=75, textline = {TT.hallway.htext4}})
+        self.area:addGameObject('Texttester', ((1920*1)/2)-325, -((1080*0.4)/2), {idr = self.id, textline = {TT.hallway.htext7, TT.hallway.htext72, TT.hallway.htext73}})
+        
+        self.area:addGameObject('Texttester', -((1920*0.8)/2)+100, -((1080*0.4)/2), {idr = self.id, textline = {TT.hallway.htext6}})
+        self.area:addGameObject('Wall', -((1920*0.8)/2)+200, -((1080*0.4)/2)+40, {w=225, h=60, idr=self.id})
+        
+        self.area:addGameObject('Texttester', 475, ((1080*0.4)/2)-100, {idr = self.id, w=75, h=75, textline = {TT.hallway.htext5, TT.hallway.htext52}})
+
         if ATDoorlock then
-            self.area:addGameObject('Texttester', -500+150, ((1080*0.4)/2)-50, {idr = self.id, textline = {TT.hallway.htext1}})
+            self.area:addGameObject('Texttester', -500+150, ((1080*0.4)/2)-50, {idr = self.id, textline = {TT.hallway.htext3}})
         else
             self.area:addGameObject('Door', -500+150, ((1080*0.4)/2)-50, {room = 'ATroom', idr=self.id, position = {0, -432+100}})
         end
@@ -62,7 +71,7 @@ function prRooms:new(area, x, y, opts)
             self.area:addGameObject('Door', 500+150, ((1080*0.4)/2)-50, {room = 'Rroom', idr=self.id, position = {0, -432+100}})
         end
 
-        self.area:addGameObject('Door', -((1920*0.8)/2), 0, {room = 'main', idr=self.id, position = {((1920*0.8)/2)-350, -300}})
+        self.area:addGameObject('Door', -((1920*0.8)/2), 0, {room = 'main', idr=self.id, position = {((1920*0.8)/2)-50-75, -300+25}})
         
     elseif self.rid == 'closet' then
         Camerascroll = false
@@ -115,10 +124,19 @@ function prRooms:new(area, x, y, opts)
         self.area:addGameObject('Wall', 382-50, -532+50, {w=50, h=964, idr=self.id})
         self.area:addGameObject('Wall', -432+50, -532+50, {w=764, h=50, idr=self.id})
         self.area:addGameObject('Wall', -432+50, 482-50, {w=764, h=50, idr=self.id})
+        self.area:addGameObject('Texttester', -432+50, 482-50, {w=764, h=50, idr = self.id, textline = {TT.croom.ctext3i, TT.croom.ctext31}})
 
-        self.area:addGameObject('Texttester', 0, 0, {idr = self.id, textline = {TT.croom.ctext1, TT.croom.ctext12, {'OS', nil}}})
+        self.area:addGameObject('Texttester', -432+75, -300+25, {h=400, idr = self.id, textline = {TT.croom.ctext5}})
+        self.area:addGameObject('Texttester', -300, -50+25, {w = 100, h = 100, c = '', idr = self.id, textline = {TT.croom.ctext6}})
 
-        self.area:addGameObject('Door', 0-25, -532+50, {room = 'main', idr=self.id, position = {0,0}})
+        self.area:addGameObject('Texttester', -320, 200, {w = 200, h = 200, c = '', idr = self.id, textline = {TT.croom.ctext4}})
+
+        self.area:addGameObject('Wall', 382-150, -350, {h=350, w=100, idr=self.id})
+        self.area:addGameObject('Texttester', 382-100, 0, {h=100, w=75, idr = self.id, textline = {TT.croom.ctext2}})
+
+        self.area:addGameObject('Texttester', 382-150, -200, {idr = self.id, textline = {TT.croom.ctext1, TT.croom.ctext12, {'OS', nil}}})
+
+        self.area:addGameObject('Door', 0-25, -532+50, {room = 'main', idr=self.id, position = {-200+25, ((1080*0.8)/2)-150}})
     elseif self.rid == 'exit' then
     end
 end

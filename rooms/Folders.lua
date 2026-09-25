@@ -35,7 +35,7 @@ function Folders:init()
     self.area.world:addCollisionClass('Folder')
 
     self.area:addGameObject('Mouse', 0, 0)
-    self.area:addGameObject('Folder', 50, 50)
+    self.area:addGameObject('Folder', 50, 50, {info = FT[2]})
     self.area:addGameObject('Folder', 150, 50)
     self.area:addGameObject('Folder', 250, 50)
     self.area:addGameObject('Folder', 350, 50)

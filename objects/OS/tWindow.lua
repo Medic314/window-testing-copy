@@ -146,27 +146,27 @@ function tWindow:draw()
     local font = love.graphics.getFont()
     local width, height = self.bounds.x + 25, self.bounds.y + font:getHeight()
     local titleHeight = 50
-    local panel = {0.85, 0.85, 0.85}
-    local navy = {0.00, 0.00, 0.50}
-    local white = {1, 1, 1}
-    local dark = {0.25, 0.25, 0.25}
+    local panel = {0.08, 0.09, 0.10}
+    local navy = {0.08, 0.18, 0.29}
+    local white = {0.88, 0.91, 0.93}
+    local dark = {0.02, 0.03, 0.04}
 
     love.graphics.setColor(panel)
     love.graphics.rectangle('fill', self.x, self.y, width, height)
     love.graphics.setColor(dark)
     love.graphics.line(self.x, self.y + height - 1, self.x + width - 1, self.y + height - 1)
     love.graphics.line(self.x + width - 1, self.y, self.x + width - 1, self.y + height - 1)
-    love.graphics.setColor(white)
+    love.graphics.setColor(0.24, 0.19, 0.12)
     love.graphics.line(self.x + 1, self.y + 1, self.x + width - 2, self.y + 1)
     love.graphics.line(self.x + 1, self.y + 1, self.x + 1, self.y + height - 2)
 
-    if Focus == self.id then love.graphics.setColor(navy) else love.graphics.setColor(dark) end
+    if Focus == self.id then love.graphics.setColor(navy) else love.graphics.setColor({0.10, 0.09, 0.12}) end
     love.graphics.rectangle('fill', self.x + 3, self.y + 3, width - 6, titleHeight - 6)
     love.graphics.setColor(white)
     love.graphics.setFont(ST.f.alphabeta)
     love.graphics.print(self.title or 'Window', self.x + 10, self.y + 14)
 
-    love.graphics.setColor(0, 0, 0)
+    love.graphics.setColor(0.88, 0.91, 0.93)
     love.graphics.setFont(ST.f.alphabeta)
     local textH = #self.lines * font:getHeight()
     local VH = self.bounds.y - 50
@@ -180,8 +180,6 @@ function tWindow:draw()
     
     love.graphics.setColor(dark)
     love.graphics.rectangle('line', self.x + 3, self.y + 3, width - 6, height - 6)
-    love.graphics.setColor(0, 0, 0)
-    
     love.graphics.setColor(1, 1, 1)
     if textH > VH then
         local trackX = self.x + self.bounds.x + 8
@@ -191,7 +189,7 @@ function tWindow:draw()
         local mScroll = textH - VH
         local thumbY = trackY + (-self.scroll / mScroll) * (trackHeight - thumbHeight)
         
-        love.graphics.setColor(dark)
+        love.graphics.setColor(navy)
         love.graphics.rectangle('line', trackX, trackY, 8, trackHeight)
         love.graphics.rectangle('fill', trackX, thumbY, 8, thumbHeight)
         love.graphics.setColor(1, 1, 1)

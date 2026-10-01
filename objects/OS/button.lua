@@ -8,6 +8,7 @@ function Button:new(area, x, y, opts)
     self.x = x
     self.y = y
     self.type = opts.type or 't'
+    self.mID = opts.mID or nil
 
     --[[self.collider = self.area.world:newRectangleCollider(self.x, self.y, self.w, self.h)
     self.collider:setCollisionClass("Desktop Button")
@@ -22,7 +23,7 @@ function Button:update(dt)
             if self.type == 'e' then
                 gotoRoom('Stage')
             else
-                self.area:addGameObject(self.type .. 'Window', self.x, self.y)
+                self.area:addGameObject(self.type .. 'Window', self.x, self.y, {mID = self.mID})
             end
         end
     end

@@ -30,10 +30,28 @@ end
 
 function file:draw()
     local MX, MY = love.mouse.getPosition()
-    love.graphics.rectangle('line', (1920/2)-self.sw/2, (1080/2)-self.sh/2, self.w, self.h)
+    local imageX = ((1920/2)-self.sw/2)-((MX-1920/2)/32)*-1
+    local imageY = ((1080/2)-self.sh/2)-((MY-1080/2)/32)*-1
     if self.scale == 1.2 then
-        love.graphics.draw(self.info, ((1920/2)-self.sw/2)-((MX-1920/2)/32)*-1, ((1080/2)-self.sh/2)-((MY-1080/2)/32)*-1, 0, self.scale, self.scale)
+        love.graphics.setColor(0.04, 0.05, 0.06, 0.65)
+        love.graphics.rectangle('fill', imageX + 12, imageY + 12, self.sw, self.sh)
+        love.graphics.setColor(0.88, 0.85, 0.76)
+        love.graphics.rectangle('fill', imageX - 8, imageY - 8, self.sw + 16, self.sh + 16)
+        love.graphics.setColor(0.25, 0.28, 0.28)
+        love.graphics.rectangle('line', imageX - 8, imageY - 8, self.sw + 16, self.sh + 16)
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.draw(self.info, imageX, imageY, 0, self.scale, self.scale)
     else
-        love.graphics.draw(self.info, ((1920/2)-self.sw/2)-((MX-1920/2)), ((1080/2)-self.sh/2)-((MY-1080/2)), 0, self.scale, self.scale)
+        imageX = ((1920/2)-self.sw/2)-((MX-1920/2))
+        imageY = ((1080/2)-self.sh/2)-((MY-1080/2))
+        love.graphics.setColor(0.04, 0.05, 0.06, 0.65)
+        love.graphics.rectangle('fill', imageX + 12, imageY + 12, self.sw, self.sh)
+        love.graphics.setColor(0.88, 0.85, 0.76)
+        love.graphics.rectangle('fill', imageX - 8, imageY - 8, self.sw + 16, self.sh + 16)
+        love.graphics.setColor(0.25, 0.28, 0.28)
+        love.graphics.rectangle('line', imageX - 8, imageY - 8, self.sw + 16, self.sh + 16)
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.draw(self.info, imageX, imageY, 0, self.scale, self.scale)
     end
+    love.graphics.setColor(1, 1, 1)
 end

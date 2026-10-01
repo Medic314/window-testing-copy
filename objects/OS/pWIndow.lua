@@ -9,10 +9,11 @@ function pWindow:new(area, x, y, opts)
     self.charsize = 16
     self.bounds = {x = 800, y = 600}
     self.dragging = false
+    self.title = opts.title or 'Pictures'
     self.imagesize = 400
 
-    self.images = {ST.placeholder, ST.placeholder2, ST.placeholder3}
-    self.selectedimage = 1
+    self.images = opts.images or {ST.placeholder, ST.placeholder2, ST.placeholder3}
+    self.selectedimage = opts.selectedimage or 1
 
     self.collider = self.area.world:newRectangleCollider(self.x, self.y-50, self.bounds.x, self.bounds.y+50)
     self.collider:setCollisionClass("Window")
@@ -24,7 +25,7 @@ function pWindow:new(area, x, y, opts)
 end
 
 function pWindow:update(dt)
-    self.collider:setPosition(self.x+self.bounds.x/2, self.y+(self.bounds.y+50)/2)
+    self.collider:setPosition(self.x+self.bounds.x/2, (self.y-50)+(self.bounds.y+50)/2)
     if Focus == self.id then self.layer = "main layer" else self.layer = 'background' end
     self.colliders = self.area.world:queryRectangleArea(self.x, self.y-50, self.bounds.x, self.bounds.y+50, {'Mouse'})
 
@@ -99,21 +100,42 @@ function pWindow:update(dt)
 end
 
 function pWindow:draw()
-    love.graphics.setColor(0, 0, 0)
-    love.graphics.rectangle('fill', self.x, self.y-50, self.bounds.x, self.bounds.y+50)
-    love.graphics.setColor(1, 1, 1)
+    local width, height = self.bounds.x, self.bounds.y + 50
+    local top = self.y - 50
+    local titleHeight = 50
+    local panel = {0.08, 0.07, 0.09}
+    local pink = {0.78, 0.20, 0.43}
+    local lightPink = {0.96, 0.55, 0.70}
+    local white = {0.93, 0.90, 0.92}
+    local dark = {0.02, 0.02, 0.03}
 
-    love.graphics.rectangle('line', self.x, self.y, self.bounds.x, self.bounds.y)
+    love.graphics.setColor(panel)
+    love.graphics.rectangle('fill', self.x, top, width, height)
+    love.graphics.setColor(dark)
+    love.graphics.line(self.x, top + height - 1, self.x + width - 1, top + height - 1)
+    love.graphics.line(self.x + width - 1, top, self.x + width - 1, top + height - 1)
+    love.graphics.setColor(0.28, 0.10, 0.17)
+    love.graphics.line(self.x + 1, top + 1, self.x + width - 2, top + 1)
+    love.graphics.line(self.x + 1, top + 1, self.x + 1, top + height - 2)
 
-    local down
-    if self.closebuttondown then down = 'fill' else down = 'line' end
-    love.graphics.rectangle('line', self.x, self.y-50, self.bounds.x, 50)
-    love.graphics.rectangle(down, self.x, self.y-50, 50, 50)
+    if Focus == self.id then love.graphics.setColor(pink) else love.graphics.setColor({0.19, 0.11, 0.15}) end
+    love.graphics.rectangle('fill', self.x + 3, top + 3, width - 6, titleHeight - 6)
+    love.graphics.setColor(white)
+    love.graphics.setFont(ST.f.alphabeta)
+    love.graphics.print(self.title, self.x + 10, top + 14)
     
     love.graphics.setFont(ST.f.alphabeta)
+    love.graphics.setColor(lightPink)
     love.graphics.print('<', self.x + ((self.bounds.x-self.imagesize)/4), (self.y+self.bounds.y/2))
     love.graphics.print('>', self.x+self.bounds.x - ((self.bounds.x-self.imagesize)/4), (self.y+self.bounds.y/2))
 
-    love.graphics.draw(self.images[self.selectedimage], (self.x+self.bounds.x/2)-self.imagesize/2, (self.y+self.bounds.y/2)-self.imagesize/2, 0, self.imagesize/400, self.imagesize/400)
+    love.graphics.setColor(white)
+    local image = self.images[self.selectedimage]
+    local imageScale = self.imagesize / math.max(image:getWidth(), image:getHeight())
+    love.graphics.draw(image, (self.x+self.bounds.x/2)-(image:getWidth()*imageScale)/2, (self.y+self.bounds.y/2)-(image:getHeight()*imageScale)/2, 0, imageScale, imageScale)
+    love.graphics.setColor(pink)
     love.graphics.circle('fill',self.x+self.bounds.x/2, self.y+self.bounds.y/2, 3)
+
+    love.graphics.rectangle('line', self.x + 3, top + 3, width - 6, height - 6)
+    love.graphics.setColor(1, 1, 1)
 end

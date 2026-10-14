@@ -6,7 +6,7 @@ function Cali:new(area, x, y, opts)
     self.X = PX or x
     self.Y = PY or y
     
-    self.W, self.H = (76/1.25)*1.25, (122/1.25)*1.25
+    self.W, self.H = 76, 122
     self.DX, self.DY = 0, 0
 
     self.collider = self.area.world:newRectangleCollider(self.X-self.W/2, self.Y-self.H/2, self.W, self.H)

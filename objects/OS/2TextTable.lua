@@ -41,6 +41,9 @@ TT = {
         ctext22 = '[[THIS ONE SEEMS TO CONTAIN OTHER INFORMATION ABOUT THE REGIMENT, AND OLD LOGS FROM THE HIGHER UPS.]]',
         ctext23 = {'[[SEARCH THROUGH THIS CABINET?]]', "YES", "NO"},
     },
+    stairs = {
+
+    },
     croom = {
         ctext1 = '[[MY COMPANY MANDATED P-PERSONAL COMPUTER.]]',
         ctext12 = {'[[LOG IN?]]', "YES", "NO"},
@@ -48,7 +51,27 @@ TT = {
         ctext3i = love.graphics.newImage('assets/1920x1080.png'),
         ctext31 = '[[ITS THE WINDOW ITS THE WINDOW WINDOW WINDOW WINDOW]]',
         ctext4 = '[[MY REFUELING STATION, I D-DON\'T REQUIRE IT RIGHT N-NOW]]',
-        ctext5 = '[[target]]',
-        ctext6 = '[[papers]]',
+        ctext5 = '.C. [[target]]',
+        ctext6 = '.R. [[papers]]',
+    },
+    atroom = {
+
+    },
+    tsroom = {
+
+    },
+    rroom = {
+
+    },
+
+
+    arctread = {
+        atext1 = ".A. {{HELLO :: CALLISTO.}}"
+    },
+    tungsten = {
+        tstext1 = ".T. >Greetings, General Callisto. How are you today?"
+    },
+    rhenium = {
+        rtext1 = ".R. howdy cali! / whats up?"
     },
 }

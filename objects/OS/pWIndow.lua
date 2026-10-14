@@ -43,15 +43,15 @@ function pWindow:update(dt)
     
     if Focus == self.id then
         --print(self.bounds.x/2-self.imagesize/2)
-        if self.dragging then self.x, self.y = GMX-self.MX2, GMY-self.MY2 end
+        if self.dragging then if self.MX2 and self.MY2 then self.x, self.y = GMX-self.MX2, GMY-self.MY2 end end
         if self.colliders[1] then
             if input:down('lmb') then
-                if (GMY < self.y) and GMX > self.x+50 then
+                if (GMY < self.y) and GMX < self.x + self.bounds.x - 50 then
                     self.dragging = true
                 end
             end
             if input:pressed('lmb') then
-                if (GMY < self.y) and GMX < self.x+50 then
+                if (GMY < self.y) and GMX >= self.x + self.bounds.x - 50 then
                     self.closebuttondown = 1
                 end
             end
@@ -122,7 +122,19 @@ function pWindow:draw()
     love.graphics.rectangle('fill', self.x + 3, top + 3, width - 6, titleHeight - 6)
     love.graphics.setColor(white)
     love.graphics.setFont(ST.f.alphabeta)
-    love.graphics.print(self.title, self.x + 10, top + 14)
+    local titleFont = love.graphics.getFont()
+    local _, titleLines = titleFont:getWrap(self.title, width - 70)
+    for index = 1, math.min(#titleLines, 2) do
+        love.graphics.print(titleLines[index], self.x + 10, top + 8 + (index - 1) * titleFont:getHeight())
+    end
+    local closeX, closeY = self.x + width - 46, top + 4
+    love.graphics.setColor(self.closebuttondown and {0.52, 0.12, 0.29} or {0.90, 0.24, 0.50})
+    love.graphics.rectangle('fill', closeX, closeY, 42, 42)
+    love.graphics.setColor(white)
+    love.graphics.setLineWidth(3)
+    love.graphics.line(closeX + 13, closeY + 13, closeX + 29, closeY + 29)
+    love.graphics.line(closeX + 29, closeY + 13, closeX + 13, closeY + 29)
+    love.graphics.setLineWidth(1)
     
     love.graphics.setFont(ST.f.alphabeta)
     love.graphics.setColor(lightPink)

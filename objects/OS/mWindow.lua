@@ -11,6 +11,26 @@ local function memoField(memo, field, fallback)
     return fallback
 end
 
+local function fitLine(font, line, width)
+    local suffix = '...'
+    while #line > 0 and font:getWidth(line .. suffix) > width do
+        line = line:sub(1, -2)
+    end
+    return line .. suffix
+end
+
+local function drawWrappedText(text, x, y, width, height)
+    local font = love.graphics.getFont()
+    local _, lines = font:getWrap(tostring(text or ''), width)
+    local maxLines = math.max(1, math.floor(height / font:getHeight()))
+    for index = 1, math.min(#lines, maxLines) do
+        local line = lines[index]
+        if font:getWidth(line) > width then line = fitLine(font, line, width) end
+        if index == maxLines and #lines > maxLines then line = fitLine(font, line, width) end
+        love.graphics.print(line, x, y + (index - 1) * font:getHeight())
+    end
+end
+
 function mWindow:new(area, x, y, opts)
     opts = opts or {}
     mWindow.super.new(self, area, x, y, opts)
@@ -31,7 +51,7 @@ function mWindow:new(area, x, y, opts)
     self.memoButtonHeight = 72
     self.memoButtonGap = 4
     self.memoPadding = 16
-    self.sidebarButtonHeight = 36
+    self.sidebarButtonHeight = 56
     self.sidebarButtonGap = 8
     self.sidebarScroll = 0
     self.activeMemoList = 1
@@ -70,7 +90,7 @@ function mWindow:update(dt)
 
     local buttonH = #self.memos * (self.memoButtonHeight + self.memoButtonGap)
     local VH = self.bounds.y - 76
-    local sidebarWidth = self.mID == 'memo' and 176 or 0
+    local sidebarWidth = self.mID == 'memo' and 224 or 0
     local sidebarContentHeight = #self.memoLists * (self.sidebarButtonHeight + self.sidebarButtonGap) - self.sidebarButtonGap
     local sidebarViewportHeight = self.bounds.y - 66
     local maxSidebarScroll = math.max(0, sidebarContentHeight - sidebarViewportHeight)
@@ -96,12 +116,12 @@ function mWindow:update(dt)
         if self.dragging then self.x, self.y = GMX-self.MX2, GMY-self.MY2 end
         if self.colliders[1] then
             if input:down('lmb') then
-                if (GMY < self.y) and GMX > self.x+50 then
+                if (GMY < self.y) and GMX < self.x + colliderWidth - 50 then
                     self.dragging = true
                 end
             end
             if input:pressed('lmb') then
-                if (GMY < self.y) and GMX < self.x+50 then
+                if (GMY < self.y) and GMX >= self.x + colliderWidth - 50 then
                     self.closebuttondown = 1
                 end
             end
@@ -201,9 +221,18 @@ function mWindow:draw()
     love.graphics.rectangle('fill', self.x + 3, top + 3, width - 6, titleHeight - 6)
     love.graphics.setColor(white)
     love.graphics.setFont(ST.f.alphabeta)
-    love.graphics.print(self.title, self.x + 10, top + 14)
+    drawWrappedText(self.title, self.x + 10, top + 8, width - 70, titleHeight - 12)
+    local closeX, closeY = self.x + width - 46, top + 4
+    local closeColor = self.mID == 'email' and {0.03, 0.48, 0.43} or {0.20, 0.42, 0.62}
+    love.graphics.setColor(self.closebuttondown and dark or closeColor)
+    love.graphics.rectangle('fill', closeX, closeY, 42, 42)
+    love.graphics.setColor(white)
+    love.graphics.setLineWidth(3)
+    love.graphics.line(closeX + 13, closeY + 13, closeX + 29, closeY + 29)
+    love.graphics.line(closeX + 29, closeY + 13, closeX + 13, closeY + 29)
+    love.graphics.setLineWidth(1)
 
-    local sidebarWidth = self.mID == 'memo' and 176 or 0
+    local sidebarWidth = self.mID == 'memo' and 224 or 0
     if self.mID == 'memo' then
         love.graphics.setColor(0.05, 0.06, 0.08)
         love.graphics.rectangle('fill', self.x + 3, self.y, sidebarWidth, self.bounds.y - 3)
@@ -216,10 +245,10 @@ function mWindow:draw()
                     love.graphics.setColor(navy)
                     love.graphics.rectangle('fill', self.x + 12, rowY, sidebarWidth - 24, self.sidebarButtonHeight)
                     love.graphics.setColor(0.94, 0.96, 0.98)
-                    love.graphics.print('> ' .. list.title, self.x + 20, rowY + 4)
+                    drawWrappedText('> ' .. list.title, self.x + 20, rowY + 3, sidebarWidth - 48, self.sidebarButtonHeight - 6)
                 else
                     love.graphics.setColor(0.61, 0.67, 0.71)
-                    love.graphics.print(list.title, self.x + 20, rowY + 4)
+                    drawWrappedText(list.title, self.x + 20, rowY + 3, sidebarWidth - 48, self.sidebarButtonHeight - 6)
                 end
             end
         end
@@ -254,9 +283,9 @@ function mWindow:draw()
                 love.graphics.setColor(0.03, 0.45, 0.41)
                 love.graphics.rectangle('fill', buttonX, currentButtonY, 6, self.memoButtonHeight)
                 love.graphics.setColor(0.68, 0.73, 0.75)
-                love.graphics.print(memoField(memo, 'sender', 'Unknown sender'), buttonX + 18, currentButtonY + 2)
+                drawWrappedText(memoField(memo, 'sender', 'Unknown sender'), buttonX + 18, currentButtonY + 2, buttonWidth - 36, 22)
                 love.graphics.setColor(0.91, 0.93, 0.94)
-                love.graphics.print(memoField(memo, 'title', 'No subject'), buttonX + 18, currentButtonY + 30)
+                drawWrappedText(memoField(memo, 'title', 'No subject'), buttonX + 18, currentButtonY + 25, buttonWidth - 36, self.memoButtonHeight - 29)
                 love.graphics.setColor(0.58, 0.63, 0.65)
             else
                 local image = memoImage(memo)
@@ -267,7 +296,7 @@ function mWindow:draw()
                 love.graphics.setColor(0.50, 0.72, 0.88)
                 love.graphics.print(image and '[IMG]' or '[TXT]', buttonX + 12, currentButtonY + 18)
                 love.graphics.setColor(0.91, 0.93, 0.95)
-                love.graphics.print(memoField(memo, 'title', 'Untitled'), buttonX + 112, currentButtonY + 4)
+                drawWrappedText(memoField(memo, 'title', 'Untitled'), buttonX + 112, currentButtonY + 4, buttonWidth - 124, self.memoButtonHeight - 8)
                 love.graphics.setColor(0.61, 0.66, 0.69)
             end
         end

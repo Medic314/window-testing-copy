@@ -13,11 +13,18 @@ function Stage:init()
     GMX, GMY = 0, 0
     CR, PR = 'main', nil
     Camerascroll = false
-
+    Day = 1
+    Time = 1
+    
+    self.area:addGameObject('Progressor', 0, 0)
     if SaveState then
         PX, PY = SaveState.PX, SaveState.PY
         CR = SaveState.Room
         print(PX, PY, CR)
+    end
+    if GameState then
+        Day = GameState.Day or 1
+        Time = GameState.Time or 1
     end
 
     input:bind('up', 'up')
@@ -56,6 +63,10 @@ function Stage:init()
     self.area:addGameObject('Cali', 0, 0)
     self.area:addGameObject('prRooms', 0, 0, {rid=CR})
     
+    self.area:addGameObject('DTexttester', 0, 0, {dtid="Arctread"})
+    self.area:addGameObject('DTexttester', 0, 0, {dtid="Tungsten"})
+    self.area:addGameObject('DTexttester', 0, 0, {dtid="Rhenium"})
+
     self.area:addGameObject('Transition', 0, 0, {type = 'room'})
 end
 

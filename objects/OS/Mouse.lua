@@ -26,7 +26,7 @@ function Mouse:update(dt)
             if #self.colliders > 1 then
                 for i=1, #self.colliders do
                     for j=1, #self.colliders do
-                        print(#self.colliders)
+                        --print(#self.colliders)
                         if findFocus(self.colliders[i].id) ~= findFocus(self.colliders[j].id) then
                             if findFocus(self.colliders[i].id) > findFocus(self.colliders[j].id) then
                                 updateFocus(self.colliders[i].id)

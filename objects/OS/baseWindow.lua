@@ -32,12 +32,12 @@ function pWindow:update(dt)
         if self.dragging then self.x, self.y = GMX-self.MX2, GMY-self.MY2 end
         if self.colliders[1] then
             if input:down('lmb') then
-                if (GMY < self.y) and GMX > self.x+50 then
+                if (GMY < self.y) and GMX < self.x + self.bounds.x - 50 then
                     self.dragging = true
                 end
             end
             if input:pressed('lmb') then
-                if (GMY < self.y) and GMX < self.x+50 then
+                if (GMY < self.y) and GMX >= self.x + self.bounds.x - 50 then
                     self.closebuttondown = 1
                 end
             end
@@ -81,8 +81,13 @@ function pWindow:draw()
     
     love.graphics.rectangle('line', self.x, self.y, self.bounds.x, self.bounds.y)
 
-    local down
-    if self.closebuttondown then down = 'fill' else down = 'line' end
     love.graphics.rectangle('line', self.x, self.y-50, self.bounds.x, 50)
-    love.graphics.rectangle(down, self.x, self.y-50, 50, 50)
+    local closeX, closeY = self.x + self.bounds.x - 46, self.y - 46
+    love.graphics.setColor(self.closebuttondown and {0.22, 0.24, 0.26} or {0.38, 0.42, 0.46})
+    love.graphics.rectangle('fill', closeX, closeY, 42, 42)
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.setLineWidth(3)
+    love.graphics.line(closeX + 13, closeY + 13, closeX + 29, closeY + 29)
+    love.graphics.line(closeX + 29, closeY + 13, closeX + 13, closeY + 29)
+    love.graphics.setLineWidth(1)
 end

@@ -33,11 +33,7 @@ function FolderT:update(dt)
 
     if self.icollider.interacted then
         gotoRoom('Folders')
-        SaveState = {
-            PX = PlayerX,
-            PY = PlayerY,
-            Room = currentRoom,
-        }
+        savestate()
     end
 end
 

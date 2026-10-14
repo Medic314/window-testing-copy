@@ -152,21 +152,19 @@ function prRooms:update(dt)
     end
 
     if input:pressed('1') then
-        SaveState = {
-            PX = PlayerX,
-            PY = PlayerY,
-            Room = currentRoom,
-        }
-        SaveGame(SaveState)
+        savestate()
     end
     if input:pressed('2') then
         ATDoorlock = not ATDoorlock
+        gamestate()
     end
     if input:pressed('3') then
         TDoorlock = not TDoorlock
+        gamestate()
     end
     if input:pressed('4') then
         RDoorlock = not RDoorlock
+        gamestate()
     end
 end
 

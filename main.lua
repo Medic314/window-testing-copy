@@ -6,12 +6,40 @@ Utils = require("libraries.general.utils")
 Physics = require("libraries.windfield")
 Json = require("libraries.general.json")
 
+function writeSaveData()
+    local info = {
+        savestate = SaveState or {},
+        gamestate = GameState or {},
+    }
+    local encoded = Json.encode(info, { indent = true })
+    love.filesystem.write('GameSave.json', encoded)
+end
+
+function savestate()
+    SaveState = {
+        PX = PlayerX,
+        PY = PlayerY,
+        Room = currentRoom,
+    }
+    writeSaveData()
+end
+
+function gamestate()
+    GameState = {
+        Day = Day,
+        Time = Time,
+    }
+    writeSaveData()
+end
+
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
     love.graphics.setLineStyle('rough')
     math.randomseed(os.time())
 
     ATDoorlock, TDoorlock, RDoorlock = false, false, false
+    timelist = {'rollcall', 'int', 'restperiod', 'night'}
+
 
     local room_files = {}
     recursiveEnumerate('rooms', room_files)
@@ -43,25 +71,14 @@ function love.load()
     
     if love.filesystem.getInfo(filename) then
         local contents = love.filesystem.read(filename)
-        SaveState = Json.decode(contents) or nil
+        local info = Json.decode(contents) or {}
+        SaveState = info.savestate or (info.Room and info) or nil
+        GameState = info.gamestate or nil
     end
 
+    GameState = GameState or nil
+
     gotoRoom('Stage')
-    
-    function SaveGame(SaveState)
-        local filename = 'GameSave.json'
-        local info = {}
-        
-        if love.filesystem.getInfo(filename) then
-            local contents = love.filesystem.read(filename)
-            info = Json.decode(contents) or {}
-        end
-        
-        info = SaveState
-        
-        local encoded = Json.encode(info, { indent = true })
-        love.filesystem.write(filename, encoded)
-    end
 end
 
 function love.update(dt)

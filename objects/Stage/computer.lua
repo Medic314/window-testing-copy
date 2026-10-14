@@ -33,11 +33,7 @@ function Computer:update(dt)
 
     if self.icollider.interacted then
         gotoRoom('OS')
-        SaveState = {
-            PX = PlayerX,
-            PY = PlayerY,
-            Room = currentRoom,
-        }
+        savestate()
     end
 end
 

@@ -91,12 +91,12 @@ function tWindow:update(dt)
         if self.dragging then self.x, self.y = GMX-self.MX2, GMY-self.MY2 end
         if self.colliders[1] then
             if input:down('lmb') then
-                if (GMY < self.y + 50) and GMX > self.x+50 then
+                if (GMY < self.y + 50) and GMX < self.x + self.bounds.x + 25 - 50 then
                     self.dragging = true
                 end
             end
             if input:pressed('lmb') then
-                if (GMY < self.y + 50) and GMX < self.x+50 then
+                if (GMY < self.y + 50) and GMX >= self.x + self.bounds.x + 25 - 50 then
                     self.closebuttondown = 1
                 end
             end
@@ -164,7 +164,19 @@ function tWindow:draw()
     love.graphics.rectangle('fill', self.x + 3, self.y + 3, width - 6, titleHeight - 6)
     love.graphics.setColor(white)
     love.graphics.setFont(ST.f.alphabeta)
-    love.graphics.print(self.title or 'Window', self.x + 10, self.y + 14)
+    local titleFont = love.graphics.getFont()
+    local _, titleLines = titleFont:getWrap(self.title or 'Window', width - 70)
+    for index = 1, math.min(#titleLines, 2) do
+        love.graphics.print(titleLines[index], self.x + 10, self.y + 8 + (index - 1) * titleFont:getHeight())
+    end
+    local closeX, closeY = self.x + width - 46, self.y + 4
+    love.graphics.setColor(self.closebuttondown and dark or {0.16, 0.36, 0.56})
+    love.graphics.rectangle('fill', closeX, closeY, 42, 42)
+    love.graphics.setColor(white)
+    love.graphics.setLineWidth(3)
+    love.graphics.line(closeX + 13, closeY + 13, closeX + 29, closeY + 29)
+    love.graphics.line(closeX + 29, closeY + 13, closeX + 13, closeY + 29)
+    love.graphics.setLineWidth(1)
 
     love.graphics.setColor(0.88, 0.91, 0.93)
     love.graphics.setFont(ST.f.alphabeta)

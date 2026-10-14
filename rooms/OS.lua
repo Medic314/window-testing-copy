@@ -64,8 +64,8 @@ function updateFocus(id)
         end
     end
     table.insert(FocusHis, Focus)
-    for i=1, #FocusHis do print(FocusHis[i],  findFocus(FocusHis[i])) end
-    print("")
+    --for i=1, #FocusHis do print(FocusHis[i],  findFocus(FocusHis[i])) end
+    --print("")
 end
 
 function OS:update(dt)

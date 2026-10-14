@@ -17,6 +17,7 @@ function Textbox:new(area, x, y, opts)
     self.data = opts.data or nil
     self.selectedtext = 1
     self.text = self.textline[self.selectedtext]
+    self.portrait = nil
     if self.text[1] then
         self.options = {}
         self.marker = 1
@@ -47,9 +48,11 @@ function Textbox:wrapText(text, maxWidth)
     local font = love.graphics.getFont()
     local lines = {}
     local currentLine = ""
+    self.portrait = nil
+    self.l = nil
 
     for word in text:gmatch("%S+") do
-        if word ~= '[]' and word ~= '[[]]' then
+        if word ~= '[]' and word ~= '[[]]' and word ~= '.C.' and word ~= '.A.' and word ~= '.T.' and word ~= '.R.' then
             local candidate = currentLine == "" and word or currentLine .. " " .. word
             if font:getWidth(candidate) <= maxWidth then
                 currentLine = candidate
@@ -65,9 +68,27 @@ function Textbox:wrapText(text, maxWidth)
                 currentLine =  ""
                 table.insert(lines, currentLine)
                 currentLine = ""
-            else
+            elseif word == '[]' then
                 table.insert(lines, currentLine)
                 currentLine = ""
+            else
+                if word == '.C.' then
+                    currentLine = ""
+                    self.portrait = ST.CaliP
+                    self.l = true
+                end
+                if word == '.A.' then
+                    currentLine = ""
+                    self.portrait = ST.ATP
+                end
+                if word == '.T.' then
+                    currentLine = ""
+                    self.portrait = ST.TSP
+                end
+                if word == '.R.' then
+                    currentLine = ""
+                    self.portrait = ST.RP
+                end
             end
         end
     end
@@ -100,7 +121,6 @@ function Textbox:update(dt)
             self.imagelock = false
         else
             if self.options then
-                print('opts')
                 self.selectedtext = self.selectedtext - 1
                 self.textline = self.textline[self.selectedtext+self.marker]
                 if self.textline == nil then STOP = true movelock, inputlock = false, false self.dead = true self.imagelock = false end
@@ -112,11 +132,7 @@ function Textbox:update(dt)
                                 OSD = self.data
                             end
                             gotoRoom('OS')
-                            SaveState = {
-                                PX = PlayerX,
-                                PY = PlayerY,
-                                Room = currentRoom,
-                            }
+                            savestate()
                             movelock, inputlock = false, false
                             STOP = true
                         elseif self.textline[i] == 'Folders' then
@@ -124,11 +140,7 @@ function Textbox:update(dt)
                                 FolderD = self.data
                             end
                             gotoRoom('Folders')
-                            SaveState = {
-                                PX = PlayerX,
-                                PY = PlayerY,
-                                Room = currentRoom,
-                            }
+                            savestate()
                             movelock, inputlock = false, false
                             STOP = true
                         end
@@ -167,6 +179,10 @@ function Textbox:draw()
     if self.imagelock and self.i then
         love.graphics.setColor(1, 1, 1)
         love.graphics.draw(self.i, camera.x-self.i:getWidth()/2, camera.y-self.i:getHeight()/2)
+    end
+    if self.portrait then
+        love.graphics.setColor(1, 1, 1)
+        if self.l then love.graphics.draw(self.portrait, camera.x-self.portrait:getWidth()*1.3, camera.y-self.portrait:getHeight()/2) else love.graphics.draw(self.portrait, camera.x-self.portrait:getWidth()*-0.3, camera.y-self.portrait:getHeight()/2) end
     end
     if type(self.text) == "string" then
         love.graphics.setColor(0, 0, 0)

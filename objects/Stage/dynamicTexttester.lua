@@ -67,6 +67,8 @@ function DTexttester:new(area, x, y, opts)
 end
 
 function DTexttester:update(dt)
+    self.position = self.positions["day" .. Day][timelist[Time]]    
+    self.X, self.Y, self.textline = self.position.x, self.position.y, self.position.tl
     if currentRoom == self.position.r then self.real = true self.X, self.Y = self.position.x, self.position.y else self.real = false self.X, self.Y = 100000, 1000000 end
     self.icollider:setPosition(self.X+self.W/2, self.Y+self.H/2)
     if self.real then 

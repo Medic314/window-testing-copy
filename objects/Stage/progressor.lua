@@ -9,12 +9,14 @@ end
 
 function Progressor:update(dt)
     if timePulse then
-        Time = Time + 1
-        if Time > 4 then
+        if Time+1 > 5 then
             Time = 1
-            Day = Day + 1
+            --Day = Day + 1
+        else
+            Time = Time + 1
         end
         timePulse = false
+        print(Day, Time)
     end
 end
 

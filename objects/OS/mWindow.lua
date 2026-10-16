@@ -34,7 +34,7 @@ end
 function mWindow:new(area, x, y, opts)
     opts = opts or {}
     mWindow.super.new(self, area, x, y, opts)
-    self.layer = 'background'
+    self.layer = 'main layer'
     self.x = gw/2
     self.y = gh/2
     love.graphics.setFont(ST.f.alphabeta)
@@ -85,7 +85,7 @@ end
 function mWindow:update(dt)
     local colliderWidth = self.bounds.x + 25
     local colliderHeight = self.bounds.y + 50
-    if Focus == self.id then self.layer = "main layer" else self.layer = 'background' end
+    if Focus == self.id then self.layer = "foreground" else self.layer = 'main layer' end
     self.colliders = self.area.world:queryRectangleArea(self.x, self.y - 50, colliderWidth, colliderHeight, {'Mouse'})
 
     local buttonH = #self.memos * (self.memoButtonHeight + self.memoButtonGap)
@@ -156,7 +156,19 @@ function mWindow:update(dt)
                     if GMX >= buttonX and GMX <= buttonX + buttonWidth and GMY >= currentButtonY and GMY <= currentButtonY + self.memoButtonHeight then
                         local image = memoImage(memo)
                         if self.mID == 'memo' and image then
-                            self.area:addGameObject('pWindow', self.x, self.y, {title = memoField(memo, 'title', 'Image'), images = {image}})
+                            local images, selectedimage = {}, 1
+                            for memoIndex, imageMemo in ipairs(self.memos) do
+                                local memoImageValue = memoImage(imageMemo)
+                                if memoImageValue then
+                                    table.insert(images, memoImageValue)
+                                    if memoIndex == index then selectedimage = #images end
+                                end
+                            end
+                            self.area:addGameObject('pWindow', self.x, self.y, {
+                                title = memoField(memo, 'title', 'Image'),
+                                images = images,
+                                selectedimage = selectedimage
+                            })
                         else
                             self.area:addGameObject('tWindow', self.x, self.y, {text = memoField(memo, 'text', ''), title = memoField(memo, 'title', 'Message')})
                         end

@@ -23,8 +23,8 @@ function Stage:init()
         print(PX, PY, CR)
     end
     if GameState then
-        Day = GameState.Day or 1
-        Time = GameState.Time or 1
+        Day = GameState.sDay or 1
+        Time = GameState.sTime or 1
     end
 
     input:bind('up', 'up')
@@ -59,6 +59,7 @@ function Stage:init()
     self.area.world:addCollisionClass('Player')
     self.area.world:addCollisionClass('Terrain')
     self.area.world:addCollisionClass('Interactable')
+    self.area.world:addCollisionClass('fInteractable')
 
     self.area:addGameObject('Cali', 0, 0)
     self.area:addGameObject('prRooms', 0, 0, {rid=CR})

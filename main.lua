@@ -26,8 +26,8 @@ end
 
 function gamestate()
     GameState = {
-        Day = Day,
-        Time = Time,
+        sDay = Day,
+        sTime = Time,
     }
     writeSaveData()
 end
@@ -38,7 +38,7 @@ function love.load()
     math.randomseed(os.time())
 
     ATDoorlock, TDoorlock, RDoorlock = false, false, false
-    timelist = {'rollcall', 'int', 'restperiod', 'night'}
+    timelist = {'pre', 'rollcall', 'int', 'restperiod', 'night'}
 
 
     local room_files = {}
@@ -48,7 +48,7 @@ function love.load()
     local object_files = {}
     recursiveEnumerate('objects/OS', object_files)
     requireFiles(object_files)
-
+    
     local object_files = {}
     recursiveEnumerate('objects/Stage', object_files)
     requireFiles(object_files)

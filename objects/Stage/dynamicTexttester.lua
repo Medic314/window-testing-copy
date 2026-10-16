@@ -16,7 +16,8 @@ function DTexttester:new(area, x, y, opts)
         self.W, self.H = 110, 200
         self.positions = {
             day1 = {
-                rollcall = {r='main', x=-500+100, y=-120, tl={TT.arctread.atext1}},
+                pre = {r='main', x=1000000, y=1000000, tl={}},
+                rollcall = {r='main', x=-500+100, y=-120, tl={TT.arctread.atext1, TT.arctread.atext2, {'PassTime', nil}}},
                 int = {r='main', x=1000000, y=1000000, tl={}},
                 restperiod = {r='hallway', x=100, y=100, tl={}},
                 night = {r='main', x=100, y=100, tl={}},
@@ -27,7 +28,8 @@ function DTexttester:new(area, x, y, opts)
         self.W, self.H = 76, 122
         self.positions = {
             day1 = {
-                rollcall = {r='main', x=-100+75, y=-95, tl={TT.tungsten.tstext1}},
+                pre = {r='main', x=1000000, y=1000000, tl={}},
+                rollcall = {r='main', x=-100+75, y=-95, tl={TT.tungsten.tstext1, TT.tungsten.tstext2, {'PassTime', nil}}},
                 int = {r='main', x=1000000, y=1000000, tl={}},
                 restperiod = {r='hallway', x=100, y=100, tl={}},
                 night = {r='main', x=100, y=100, tl={}},
@@ -38,7 +40,8 @@ function DTexttester:new(area, x, y, opts)
         self.W, self.H = 80, 135
         self.positions = {
             day1 = {
-                rollcall = {r='main', x=-300+100, y=-100, tl={TT.rhenium.rtext1}},
+                pre = {r='main', x=1000000, y=1000000, tl={}},
+                rollcall = {r='main', x=-300+100, y=-100, tl={TT.rhenium.rtext1, TT.rhenium.rtext2, {'PassTime', nil}}},
                 int = {r='main', x=1000000, y=1000000, tl={}},
                 restperiod = {r='hallway', x=100, y=100, tl={}},
                 night = {r='main', x=100, y=100, tl={}},

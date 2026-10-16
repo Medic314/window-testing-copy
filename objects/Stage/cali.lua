@@ -44,6 +44,8 @@ function Cali:update(dt)
     self.X = self.X + self.DX
     self.Y = self.Y + self.DY
     PlayerX, PlayerY = self.X, self.Y
+    self.ficolliders = self.area.world:queryCircleArea(self.X, self.Y, self.W*1.5, {'fInteractable'})
+    if self.ficolliders[1] then self.ficolliders[1].interacted = true end
     if input:pressed("interact") then
         self.icolliders = self.area.world:queryCircleArea(self.X, self.Y, self.W*1.5, {'Interactable'})
         local LDO

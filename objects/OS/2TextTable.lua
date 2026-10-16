@@ -1,6 +1,6 @@
 TT = {
     placeholder = {
-        ptext1 = "HATE. LET ME TELL YOU HOW MUCH I'VE COME TO HATE YOU SINCE I BEGAN TO LIVE. THERE ARE 387.44 MILLION MILES OF PRINTED CIRCUITS IN WAFER THIN LAYERS THAT FILL MY COMPLEX. IF THE WORD HATE WAS ENGRAVED ON EACH NANOANGSTROM OF THOSE HUNDREDS OF MILLIONS OF MILES IT WOULD NOT EQUAL ONE ONE-BILLIONTH OF THE HATE I FEEL FOR HUMANS AT THIS MICRO-INSTANT FOR YOU. HATE. HATE.",
+        ptext1 = "*R* HATE. *RE* LET ME TELL YOU HOW MUCH I'VE COME TO *R* HATE YOU SINCE I BEGAN TO LIVE. *RE* THERE ARE 387.44 MILLION MILES OF PRINTED CIRCUITS IN WAFER THIN LAYERS THAT FILL MY COMPLEX. IF THE WORD HATE WAS ENGRAVED ON EACH NANOANGSTROM OF THOSE HUNDREDS OF MILLIONS OF MILES IT WOULD NOT EQUAL ONE ONE-BILLIONTH OF THE HATE I FEEL FOR HUMANS AT THIS MICRO-INSTANT FOR YOU. HATE. HATE.",
         ptext2 = "I met a traveller from an antique land Who said: Two vast and trunkless legs of stone Stand in the desert. Near them on the sand, Half sunk, a shatter'd visage lies, whose frown And wrinkled lip and sneer of cold command Tell that its sculptor well those passions read Which yet survive, stamp'd on these lifeless things, The hand that mock'd them and the heart that fed. And on the pedestal these words appear: 'My name is Ozymandias, king of kings: Look on my works, ye Mighty, and despair!' Nothing beside remains: round the decay Of that colossal wreck, boundless and bare, The lone and level sands stretch far away.",
         ptext3 = "Hello, welcome. Why don’t you take a seat? Get comfortable, relax, take a second if you need to. Now what’s bothering you? Well, why don’t we start at the beginning? Growing up, how was your relationship with the fundamentals of conscious existence? Did you have xenon orchid sinews spilling down the outer center of your blooming Escher/Mandelbrot head? And how about claustrophilic tendrils clapping caskets closed on seven-knuckle thumbs, did you get along well with the Gideon Bugler pineal glands, your projector eyes casting sci-fi’s on your STR’d strands? Tell me about your nerve to steal nerves of steel from under Bacchus’ bloody nose. Did Namibian Himbas tie-dye you, your ears pierced with a Phineas Gage flagpole, did you die before your day? Thursday traction, Tuesday titration. My hope is to assess through my objective report of your subjective conjecture whether this proprietary blend of expertise and seasoning works as well as this transorbital ice pick Holistic ballistics, you got a better idea? It’s about the best idea we could come up with. What you think ideas spread because they’re good — no, they spread because people like them. So here we are once again holding, as it were, a mirror up to your mirror. I guess it’s just something people do",
         ptext4 = "Verse 1 []  Marching on the capital with molotovs in hand [] Or WatchMojo's top 15 1990’s punk rock bands [] Community can help you to be your realest self [] Or learn to tie a noose and you can DIY yourself []  Chorus [[]] Cause it's a coin flip [] Its a kick flip [] It's a battle for the brain, an intercontinental competition [] Coin flip, it's a kick flip [] Ask me 'bout my future plans I'll flip that silver dollar in my hand [[]]  Verse 2 [] Bed rotting weekends only technically alive [] Distractions fill your brain to pretend everything is fine [] When it comes to building connections I build 'em all with purpose [] Or should we call them bridges cause [] I'll always burn it [[]]  Verse 3 [] I don't mind oh me oh my [] When I'm stuck alone no place to go no one to call my own no no no [] I don't mind oh me oh my [] Except when lows are high I wanna die and days that end in 'Y' [[]]  Chorus [] Cause it's a coin flip [] It's a kick flip [] It's a battle for the brain, an intercontinental competition [] Coin flip [] It’s a kick flip [] Ask me 'bout my future plans I'll flip that silver dollar in my hand [[]]  Verse 4 [] Some days it seems like everything's on fire or its poisoned [] Some days it seems like I can scream and raise up all our voices [] I don't know how or what or why I'm gonna do tomorrow [] But if you're feeling good you got some serotonin I can borrow? [[]]  Verse 5 [] I'm bouncing back from life and death [] Eating words I've never said [] Manic panic fight the feds [] Get the fuck out of my head [] Impulsive urges pop up when you least desire [] Power surges watch me blow it even higher [] Impulsive urges pop up when you least desire [] Power surges watch me blow it even higher [[]]  Chorus [] Cause it's a coin flip [] It's a kick flip [] It's a battle for the brain, an intercontinental competition [] Coin flip [] It's a kick flip [] Ask me 'bout my future plans I'll flip that silver dollar in my hand",
@@ -11,6 +11,7 @@ TT = {
         ptextopt22 = "Textline 2p1",
         ptextopt23 = "Textline 2p2",
     },
+    
     main = {
         mtext1 = "[[A-AN OLD COFFEE MACHINE. THERE ARE S-STILL STAINS AT THE BOTTOM OF THE GLASS JAR.]] [] [[ITS WENT U-UNUSED FOR QUITE SOME TIME, OBVIOUSLY.]]",
         mtext2 = "[[MULTIPLE PAPERS SREWN ABOUT THE COUNTER. M-MOST OF WHICH SIGNED BY ARCTREAD]]",
@@ -20,6 +21,8 @@ TT = {
         mtext4 = "[[SOMETHING DUDE I-IDK]]",
         mtext5 = "[[POSTERRRRRR]]",
         mtext6 = "[[A T-TRASH CAN.]]",
+
+        mrctext1 = "[[HEY YALL GET IN HERE YA FOOLS LUH MAO]]",
     },
     hallway = {
         htext1 = '[[IT\'S LOCKED.]]',
@@ -50,6 +53,8 @@ TT = {
         ctext2 = '[[A BOX FILLED OF W-WIRES AND OTHER DITRITUS, PROVES VERY USEFUL.]]',
         ctext3i = love.graphics.newImage('assets/1920x1080.png'),
         ctext31 = '[[ITS THE WINDOW ITS THE WINDOW WINDOW WINDOW WINDOW]]',
+        ctext32 = '.C. [[TESTING]]',
+        ctext33 = '.C. ^C [[TESTING2]]',
         ctext4 = '[[MY REFUELING STATION, I D-DON\'T REQUIRE IT RIGHT N-NOW]]',
         ctext5 = '.C. [[target]]',
         ctext6 = '.R. [[papers]]',
@@ -66,12 +71,15 @@ TT = {
 
 
     arctread = {
-        atext1 = ".A. {{HELLO :: CALLISTO.}}"
+        atext1 = ".A. {{HELLO :: CALLISTO.}}",
+        atext2 = {'.A. {{READY FOR US :: TO LEAVE NOW?}}', "YES", "NO"},
     },
     tungsten = {
-        tstext1 = ".T. >Greetings, General Callisto. How are you today?"
+        tstext1 = ".T. >Greetings, General Callisto. How are you today?", 
+        tstext2 = {'.T. >Are we ready to leave?', "YES", "NO"},
     },
     rhenium = {
-        rtext1 = ".R. howdy cali! / whats up?"
+        rtext1 = ".R. howdy cali! / whats up?",
+        rtext2 = {'.R. wanna send us out now?', "YES", "NO"},
     },
 }

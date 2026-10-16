@@ -36,6 +36,7 @@ function prRooms:new(area, x, y, opts)
         self.area:addGameObject('Door', ((1920*0.8)/2)-50, -300, {room = 'hallway', idr=self.id, position = {-((1920*0.8)/2)+125, 0+25}})
         self.area:addGameObject('Door', -700, -((1080*0.8)/2), {room = 'stairs', idr=self.id, position = {550, 325-150}})
         self.area:addGameObject('Door', -605, ((1080*0.8)/2)-50, {room = 'closet', idr=self.id, position = {0+50, -315+125}})
+        if Time == 1 then self.area:addGameObject('FTexttester', -200, ((1080*0.8)/2)-50, {idr = self.id, textline = {TT.main.mrctext1}, func = function() timePulse = true end}) end
         self.area:addGameObject('Door', -200, ((1080*0.8)/2)-50, {room = 'Croom', idr=self.id, position = {0, -432+100}})
         self.area:addGameObject('Door', 500, ((1080*0.8)/2)-50, {room = 'exit', idr=self.id, position = {0,0}})
     elseif self.rid == 'hallway' then
@@ -124,7 +125,7 @@ function prRooms:new(area, x, y, opts)
         self.area:addGameObject('Wall', 382-50, -532+50, {w=50, h=964, idr=self.id})
         self.area:addGameObject('Wall', -432+50, -532+50, {w=764, h=50, idr=self.id})
         self.area:addGameObject('Wall', -432+50, 482-50, {w=764, h=50, idr=self.id})
-        self.area:addGameObject('Texttester', -432+50, 482-50, {w=764, h=50, idr = self.id, textline = {TT.croom.ctext3i, TT.croom.ctext31}})
+        self.area:addGameObject('Texttester', -432+50, 482-50, {w=764, h=50, idr = self.id, textline = {TT.croom.ctext3i, TT.croom.ctext31, TT.croom.ctext32, TT.croom.ctext33}})
 
         self.area:addGameObject('Texttester', -432+75, -300+25, {h=400, idr = self.id, textline = {TT.croom.ctext5}})
         self.area:addGameObject('Texttester', -300, -50+25, {w = 100, h = 100, c = '', idr = self.id, textline = {TT.croom.ctext6}})
@@ -153,17 +154,19 @@ function prRooms:update(dt)
 
     if input:pressed('1') then
         savestate()
-    end
-    if input:pressed('2') then
-        ATDoorlock = not ATDoorlock
         gamestate()
     end
+    if input:pressed('2') then
+        --ATDoorlock = not ATDoorlock
+        timePulse = true
+    end
     if input:pressed('3') then
-        TDoorlock = not TDoorlock
+        Day, Time = 1, 1
+        savestate()
         gamestate()
     end
     if input:pressed('4') then
-        RDoorlock = not RDoorlock
+        --RDoorlock = not RDoorlock
         gamestate()
     end
 end

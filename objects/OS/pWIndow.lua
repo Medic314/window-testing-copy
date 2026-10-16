@@ -2,7 +2,7 @@ pWindow = GameObject:extend()
 
 function pWindow:new(area, x, y, opts)
     pWindow.super.new(self, area, x, y, opts)
-    self.layer = 'background'
+    self.layer = 'main layer'
     self.x = gw/2
     self.y = gh/2
     love.graphics.setFont(ST.f.alphabeta)
@@ -26,7 +26,7 @@ end
 
 function pWindow:update(dt)
     self.collider:setPosition(self.x+self.bounds.x/2, (self.y-50)+(self.bounds.y+50)/2)
-    if Focus == self.id then self.layer = "main layer" else self.layer = 'background' end
+    if Focus == self.id then self.layer = "foreground" else self.layer = 'main layer' end
     self.colliders = self.area.world:queryRectangleArea(self.x, self.y-50, self.bounds.x, self.bounds.y+50, {'Mouse'})
 
     if input:pressed('lmb') then
@@ -104,8 +104,8 @@ function pWindow:draw()
     local top = self.y - 50
     local titleHeight = 50
     local panel = {0.08, 0.07, 0.09}
-    local pink = {0.78, 0.20, 0.43}
-    local lightPink = {0.96, 0.55, 0.70}
+    local pink = {0.23, 0.08, 0.25}
+    local lightPink = {0.32, 0.12, 0.36}
     local white = {0.93, 0.90, 0.92}
     local dark = {0.02, 0.02, 0.03}
 
@@ -128,7 +128,7 @@ function pWindow:draw()
         love.graphics.print(titleLines[index], self.x + 10, top + 8 + (index - 1) * titleFont:getHeight())
     end
     local closeX, closeY = self.x + width - 46, top + 4
-    love.graphics.setColor(self.closebuttondown and {0.52, 0.12, 0.29} or {0.90, 0.24, 0.50})
+    love.graphics.setColor(self.closebuttondown and pink or lightPink)
     love.graphics.rectangle('fill', closeX, closeY, 42, 42)
     love.graphics.setColor(white)
     love.graphics.setLineWidth(3)
@@ -137,7 +137,7 @@ function pWindow:draw()
     love.graphics.setLineWidth(1)
     
     love.graphics.setFont(ST.f.alphabeta)
-    love.graphics.setColor(lightPink)
+    --love.graphics.setColor(lightPink)
     love.graphics.print('<', self.x + ((self.bounds.x-self.imagesize)/4), (self.y+self.bounds.y/2))
     love.graphics.print('>', self.x+self.bounds.x - ((self.bounds.x-self.imagesize)/4), (self.y+self.bounds.y/2))
 

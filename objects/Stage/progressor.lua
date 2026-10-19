@@ -9,14 +9,26 @@ end
 
 function Progressor:update(dt)
     if timePulse then
+        self.area:addGameObject('Transition', 0, 0, {type = 'time'})
         if Time+1 > 5 then
             Time = 1
             --Day = Day + 1
         else
             Time = Time + 1
         end
+        if Time == 2 or Time == 4 then
+            ATDoorlock, TDoorlock, RDoorlock = true, true, true
+        elseif Time == 5 then 
+            ATDoorlock = false 
+        else 
+            ATDoorlock, TDoorlock, RDoorlock = false, false, false 
+        end
         timePulse = false
         print(Day, Time)
+    end
+    if notifpulse then 
+        self.area:addGameObject('Notification', 0, 0, {text=notifpulse})
+        notifpulse = nil
     end
 end
 

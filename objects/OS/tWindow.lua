@@ -26,6 +26,7 @@ function tWindow:new(area, x, y, opts)
 
     updateFocus(self.id)
     self.MX2, self.MY2 = GMX - self.x, GMY - self.y
+    if opts.func then opts.func() end
 end
 
 function tWindow:wrapText(text, maxWidth)

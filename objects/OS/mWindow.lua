@@ -31,6 +31,10 @@ local function drawWrappedText(text, x, y, width, height)
     end
 end
 
+local function keyJustPressed(key)
+    return input.state[key] and not input.prev_state[key]
+end
+
 function mWindow:new(area, x, y, opts)
     opts = opts or {}
     mWindow.super.new(self, area, x, y, opts)
@@ -41,20 +45,31 @@ function mWindow:new(area, x, y, opts)
     self.charsize = 16
     self.bounds = {x = 800, y = 600}
     self.dragging = false
-    self.memos = opts.memos or {{text=TT.placeholder.ptext1, title="AM Speech"}, {text=TT.placeholder.ptext2, title="Ozymandias Poem"}, {text=TT.placeholder.ptext3, title="BlackBoxWarrior Monologue"}, {text=TT.placeholder.ptext4, title="COINFLIP"}}
+    self.memos = opts.memos or {{text=TT.placeholder.ptext1, title="AM Speech", sender = 'A.M.'}, {text=TT.placeholder.ptext2, title="Ozymandias Poem", sender = 'W. White'}, {text=TT.placeholder.ptext3, title="BlackBoxWarrior Monologue", sender = "Will Wood"}, {text=TT.placeholder.ptext4, title="COINFLIP", sender = 'Cricket!'}}
     self.memos2 = opts.memos2 or {{title="Image", imageLine=ST.placeholder}, {title="Image", imageLine=ST.placeholder2}, {title="Image", imageLine=ST.placeholder3}}
     self.memos3 = opts.memos3 or {{title="Image", imageLine=ST.placeholder}}
-    self.memos2Name = "Gallery"
-    self.memos3Name = "Placehold"
     self.mID = opts.mID or 'memo'
+    self.memosName = opts.memosName or (self.mID == 'email' and 'Inbox' or nil)
+    self.memos2Name = opts.memos2Name or (self.mID == 'email' and 'Sent' or 'Gallery')
+    self.memos3Name = opts.memos3Name or (self.mID == 'email' and 'Archive' or 'Placehold')
     self.title = opts.title or (self.mID == 'email' and 'Inbox' or 'File Manager')
+    self.password = opts.password
+    self.passwordKey = opts.passwordKey or (tostring(self.mID) .. ':' .. tostring(x) .. ':' .. tostring(y))
+    self.passwordEntry = ''
+    self.passwordError = false
+    self.locked = self.password ~= nil and not (UnlockedFiles and UnlockedFiles[self.passwordKey])
     self.memoButtonHeight = 72
     self.memoButtonGap = 4
     self.memoPadding = 16
+    self.emailTabWidth = 140
+    self.emailTabGap = 8
+    self.emailTabPadding = 12
+    self.emailTabHeight = 36
     self.sidebarButtonHeight = 56
     self.sidebarButtonGap = 8
     self.sidebarScroll = 0
     self.activeMemoList = 1
+    self.selffocus = false
     self.memoLists = {{key = 'memos', title = self.memosName or 'Memos', items = self.memos}}
 
     local numberedLists = {}
@@ -114,6 +129,26 @@ function mWindow:update(dt)
     
     if Focus == self.id then
         if self.dragging then self.x, self.y = GMX-self.MX2, GMY-self.MY2 end
+        if self.locked then
+            if self.selffocus then
+                if keyJustPressed('backspace') then
+                    self.passwordEntry = self.passwordEntry:sub(1, -2)
+                    self.passwordError = false
+                end
+                if keyJustPressed('return') or keyJustPressed('kpenter') then
+                    if self.passwordEntry == tostring(self.password) then
+                        UnlockedFiles = UnlockedFiles or {}
+                        UnlockedFiles[self.passwordKey] = true
+                        self.locked = false
+                        self.passwordError = false
+                        writeSaveData()
+                    else
+                        self.passwordEntry = ''
+                        self.passwordError = true
+                    end
+                end
+            end
+        end
         if self.colliders[1] then
             if input:down('lmb') then
                 if (GMY < self.y) and GMX < self.x + colliderWidth - 50 then
@@ -126,16 +161,16 @@ function mWindow:update(dt)
                 end
             end
             local overSidebar = sidebarWidth > 0 and GMX >= self.x and GMX <= self.x + sidebarWidth and GMY >= self.y
-            if input:pressed('upscroll') then
+            if not self.locked and input:pressed('upscroll') then
                 if overSidebar then self.sidebarScroll = math.min(0, self.sidebarScroll + 32)
                 else self.scroll = self.scroll + 8*2 end
             end
-            if input:pressed('downscroll') then
+            if not self.locked and input:pressed('downscroll') then
                 if overSidebar then self.sidebarScroll = math.max(-maxSidebarScroll, self.sidebarScroll - 32)
                 else self.scroll = self.scroll - 8*2 end
             end
 
-            if input:pressed('lmb') and sidebarWidth > 0 then
+            if not self.locked and input:pressed('lmb') and sidebarWidth > 0 then
                 for index, list in ipairs(self.memoLists) do
                     local rowY = self.y + 48 + (index - 1) * (self.sidebarButtonHeight + self.sidebarButtonGap) + self.sidebarScroll
                     if GMX >= self.x + 12 and GMX <= self.x + sidebarWidth - 12 and GMY >= rowY and GMY <= rowY + self.sidebarButtonHeight then
@@ -147,7 +182,21 @@ function mWindow:update(dt)
                 end
             end
 
-            if input:pressed('lmb') and GMY >= self.y + 58 then
+            if not self.locked and input:pressed('lmb') and self.mID == 'email' then
+                for index = 1, math.min(3, #self.memoLists) do
+                    local tabX = self.x + self.emailTabPadding + (index - 1) * (self.emailTabWidth + self.emailTabGap)
+                    local tabY = self.y + 3
+                    if GMX >= tabX and GMX <= tabX + self.emailTabWidth and GMY >= tabY and GMY <= tabY + self.emailTabHeight then
+                        local list = self.memoLists[index]
+                        self.activeMemoList = index
+                        self.memos = list.items
+                        self.scroll = 0
+                        break
+                    end
+                end
+            end
+
+            if not self.locked and input:pressed('lmb') and GMY >= self.y + 58 then
                 local buttonWidth = self.bounds.x - sidebarWidth - self.memoPadding * 2
                 local buttonX = self.x + sidebarWidth + self.memoPadding
                 local buttonY = self.y + 64
@@ -177,21 +226,37 @@ function mWindow:update(dt)
                 end
             end
         end
-        if input:pressed('left') or input:down('left') then
-            self.bounds.x = self.bounds.x - 16
+        local fieldWidth = math.min(360, self.bounds.x - 80)
+        local fieldX = self.x + (self.bounds.x - fieldWidth) / 2
+        local fieldY = self.y + self.bounds.y / 2 - 12
+        self.mcolliders = self.area.world:queryRectangleArea(fieldX, fieldY, fieldWidth, self.memoButtonHeight, {'Mouse'})
+        if self.mcolliders[1] then
+            if input:pressed('lmb') then
+                self.selffocus = true
+            end
+        else
+            if input:pressed('lmb') then
+                self.selffocus = false
+            end
         end
-        if input:pressed('right') or input:down('right') then
-            self.bounds.x = self.bounds.x + 16
-        end
-        if input:pressed('up') or input:down('up') then
-            self.bounds.y = self.bounds.y - 16
-        end
-        if input:pressed('down') or input:down('down') then
-            self.bounds.y = self.bounds.y + 16
+        if not self.selffocus then
+            if input:pressed('left') or input:down('left') then
+                self.bounds.x = self.bounds.x - 16
+            end
+            if input:pressed('right') or input:down('right') then
+                self.bounds.x = self.bounds.x + 16
+            end
+            if input:pressed('up') or input:down('up') then
+                self.bounds.y = self.bounds.y - 16
+            end
+            if input:pressed('down') or input:down('down') then
+                self.bounds.y = self.bounds.y + 16
+            end
         end
     end
     
-    if self.bounds.x < 400 then self.bounds.x = 400 end
+    local minWidth = self.mID == 'email' and (self.emailTabPadding * 2 + self.emailTabWidth * 3 + self.emailTabGap * 2) or 400
+    if self.bounds.x < minWidth then self.bounds.x = minWidth end
     if self.bounds.y < 300 then self.bounds.y = 300 end
     if self.bounds.x > 1500 then self.bounds.x = 1500 end
     if self.bounds.y > 1500 then self.bounds.y = 1500 end
@@ -209,6 +274,13 @@ function mWindow:update(dt)
         self.colliderHeight = colliderHeight
     end
     self.collider:setPosition(self.x + colliderWidth / 2, self.y - 50 + colliderHeight / 2)
+end
+
+function mWindow:textinput(text)
+    if self.locked and Focus == self.id and self.selffocus then
+        self.passwordEntry = self.passwordEntry .. text
+        self.passwordError = false
+    end
 end
 
 function mWindow:draw()
@@ -279,8 +351,19 @@ function mWindow:draw()
     else
         love.graphics.setColor(0.02, 0.20, 0.19)
         love.graphics.rectangle('fill', self.x + 3, self.y, self.bounds.x - 6, 42)
-        love.graphics.setColor(0.88, 0.94, 0.93)
-        love.graphics.print('INBOX     SENT     ARCHIVE', self.x + 18, self.y + 6)
+        for index = 1, math.min(3, #self.memoLists) do
+            local tabX = self.x + self.emailTabPadding + (index - 1) * (self.emailTabWidth + self.emailTabGap)
+            local tabY = self.y + 3
+            local list = self.memoLists[index]
+            if index == self.activeMemoList then
+                love.graphics.setColor(0.03, 0.45, 0.41)
+            else
+                love.graphics.setColor(0.08, 0.13, 0.14)
+            end
+            love.graphics.rectangle('fill', tabX, tabY, self.emailTabWidth, self.emailTabHeight)
+            love.graphics.setColor(index == self.activeMemoList and {0.94, 0.97, 0.96} or {0.66, 0.74, 0.73})
+            drawWrappedText(list.title, tabX + 8, tabY + 8, self.emailTabWidth - 16, self.emailTabHeight - 10)
+        end
     end
 
     local buttonWidth = self.bounds.x - sidebarWidth - self.memoPadding * 2
@@ -330,6 +413,23 @@ function mWindow:draw()
 
         love.graphics.rectangle('line', trackX, trackY, 8, trackHeight)
         love.graphics.rectangle('fill', trackX, thumbY, 8, thumbHeight)
+    end
+    if self.locked then
+        love.graphics.setColor(0.04, 0.05, 0.07, 0.98)
+        love.graphics.rectangle('fill', self.x + 3, self.y + 3, self.bounds.x - 6, self.bounds.y - 6)
+        love.graphics.setColor(0.88, 0.91, 0.93)
+        love.graphics.printf('PASSWORD REQUIRED', self.x + 24, self.y + self.bounds.y / 2 - 54, self.bounds.x - 48, 'center')
+        love.graphics.setColor(0.12, 0.14, 0.17)
+        local fieldWidth = math.min(360, self.bounds.x - 80)
+        local fieldX = self.x + (self.bounds.x - fieldWidth) / 2
+        local fieldY = self.y + self.bounds.y / 2 - 12
+        love.graphics.rectangle('fill', fieldX, fieldY, fieldWidth, 40)
+        love.graphics.setColor(0.30, 0.35, 0.39)
+        love.graphics.rectangle('line', fieldX, fieldY, fieldWidth, 40)
+        love.graphics.setColor(self.passwordError and {0.95, 0.35, 0.32} or {0.88, 0.91, 0.93})
+        love.graphics.printf(string.rep('*', #self.passwordEntry), fieldX + 10, fieldY + 10, fieldWidth - 20, 'left')
+        love.graphics.setColor(self.passwordError and {0.95, 0.35, 0.32} or {0.61, 0.66, 0.69})
+        love.graphics.printf(self.passwordError and 'Incorrect password' or 'Type password, then press Enter', self.x + 24, fieldY + 52, self.bounds.x - 48, 'center')
     end
     love.graphics.setColor(1, 1, 1)
 end

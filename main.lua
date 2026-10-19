@@ -7,9 +7,10 @@ Physics = require("libraries.windfield")
 Json = require("libraries.general.json")
 
 function writeSaveData()
+    savepulse = true
     local info = {
-        savestate = SaveState or {},
         gamestate = GameState or {},
+        unlockedFiles = UnlockedFiles or {},
     }
     local encoded = Json.encode(info, { indent = true })
     love.filesystem.write('GameSave.json', encoded)
@@ -21,7 +22,6 @@ function savestate()
         PY = PlayerY,
         Room = currentRoom,
     }
-    writeSaveData()
 end
 
 function gamestate()
@@ -48,7 +48,7 @@ function love.load()
     local object_files = {}
     recursiveEnumerate('objects/OS', object_files)
     requireFiles(object_files)
-    
+
     local object_files = {}
     recursiveEnumerate('objects/Stage', object_files)
     requireFiles(object_files)
@@ -65,7 +65,6 @@ function love.load()
     paused = false 
 
     current_room = nil
-    --resize(0.625)
     
     local filename = 'GameSave.json'
     
@@ -74,9 +73,11 @@ function love.load()
         local info = Json.decode(contents) or {}
         SaveState = info.savestate or (info.Room and info) or nil
         GameState = info.gamestate or nil
+        UnlockedFiles = info.unlockedFiles or {}
     end
 
     GameState = GameState or nil
+    UnlockedFiles = UnlockedFiles or {}
 
     gotoRoom('Stage')
 end
@@ -87,6 +88,13 @@ end
 
 function love.draw()
     if current_room then current_room:draw() end
+end
+
+function love.textinput(text)
+    if not current_room or not current_room.area then return end
+    for _, gameObject in ipairs(current_room.area.game_objects) do
+        if gameObject.textinput then gameObject:textinput(text) end
+    end
 end
 
 function resize(s)

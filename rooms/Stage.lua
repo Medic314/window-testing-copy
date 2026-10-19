@@ -25,6 +25,14 @@ function Stage:init()
     if GameState then
         Day = GameState.sDay or 1
         Time = GameState.sTime or 1
+        if not SaveState then
+            if Time == 1 then
+                PX, PY = -219, 303
+                CR = 'Croom'
+            else
+                PX, PY = -175, 287
+            end
+        end
     end
 
     input:bind('up', 'up')

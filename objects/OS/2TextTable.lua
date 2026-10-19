@@ -11,75 +11,93 @@ TT = {
         ptextopt22 = "Textline 2p1",
         ptextopt23 = "Textline 2p2",
     },
-    
-    main = {
-        mtext1 = "[[A-AN OLD COFFEE MACHINE. THERE ARE S-STILL STAINS AT THE BOTTOM OF THE GLASS JAR.]] [] [[ITS WENT U-UNUSED FOR QUITE SOME TIME, OBVIOUSLY.]]",
-        mtext2 = "[[MULTIPLE PAPERS SREWN ABOUT THE COUNTER. M-MOST OF WHICH SIGNED BY ARCTREAD]]",
-        mtext3 = "[[AN IMPORTANT PAPER.]]",
-        mtext32 = "Blah blah blah im sam and im SUPID WAGHHHGHHGHHGHHHHGHH",
-        mtext33 = "[[WOW!]]",
-        mtext4 = "[[SOMETHING DUDE I-IDK]]",
-        mtext5 = "[[POSTERRRRRR]]",
-        mtext6 = "[[A T-TRASH CAN.]]",
 
-        mrctext1 = "[[HEY YALL GET IN HERE YA FOOLS LUH MAO]]",
+    COST = {
+        memo1 = "Callisto is a *R* Stupid Dumb Baby. *RE*"
+    },
+    AOST = {
+
+    },
+    TOST = {
+
+    },
+    ROST = {
+
+    },
+
+    main = {
+        coffee = "[[A-AN OLD COFFEE MACHINE. THERE ARE S-STILL STAINS AT THE BOTTOM OF THE GLASS JAR.]] [] [[ITS WENT U-UNUSED FOR QUITE SOME TIME, OBVIOUSLY.]]",
+        papers = "[[MULTIPLE PAPERS SREWN ABOUT THE COUNTER. M-MOST OF WHICH SIGNED BY ARCTREAD]]",
+        sampaper = "[[AN IMPORTANT PAPER.]]",
+        sampaper2 = "Blah blah blah im sam and im SUPID WAGHHHGHHGHHGHHHHGHH",
+        sampaper3 = "[[WOW!]]",
+        object = "[[SOMETHING DUDE I-IDK]]",
+        poster = "[[POSTERRRRRR]]",
+        trash = "[[A T-TRASH CAN.]]",
+
+        rollcallstart = "You hold down the intercom next to your door. [] [[WILL ALL ELITES PLEASE R-REPORT TO THE MEETING ROOM FOR R-ROLLCALL?]]",
     },
     hallway = {
-        htext1 = '[[IT\'S LOCKED.]]',
-        htext2 = '[[BEST N-NOT WHILE SHE\'S HERE.]]',
-        htext3 = '[[BEST N-NOT WHILE HE\'S HERE.]]',
-        htext4 = '[[AN EMPTY SHELF.]]',
-        htext5 = '[[R-RHENIUM\'S POTTED PLANT, I S-SEE HIM OUT HERE WATERING IT EVERY DAY.]] [] [[WHERE HE GETS W-WATER IS BEYOND ME.]]',
-        htext52 = '[[ITS NAME IS \"LIL\' R\", ACCORDING TO H-HIM]]',
-        htext6 = '[[ONE OF ARCTREADS VESTS.]] [] [[THEY\'RE ACTUALLY F-FULL COATS, JUST WITH THE ARMS RIPPED O-OFF.]]',
-        htext7 = '[[A MOTIVATIONAL POSTER, NOT FROM P-PIKE]]',
-        htext72 = '[[IT DEPICTS AN AN-ANTHROPOMORPHIC OCEAN WAVE WITH THE T-TEXT \"SEAS THE DAY\"]]',
-        htext73 = '[[ITS EMBARASSING TO A-ADMIT IT MAKES M-ME CHUCKLE EVERY TIME.]]',
+        Alocked = '[[IT\'S LOCKED.]]',
+        Tlocked = '[[BEST N-NOT WHILE SHE\'S HERE.]]',
+        Rlocked = '[[BEST N-NOT WHILE HE\'S HERE.]]',
+        shelf = '[[AN EMPTY SHELF.]]',
+        lilr = '[[R-RHENIUM\'S POTTED PLANT, I S-SEE HIM OUT HERE WATERING IT EVERY DAY.]] [] [[WHERE HE GETS W-WATER IS BEYOND ME.]]',
+        lilr2 = '[[ITS NAME IS \"LIL\' R\", ACCORDING TO H-HIM]]',
+        vest = '[[ONE OF ARCTREADS VESTS.]] [] [[THEY\'RE ACTUALLY F-FULL COATS, JUST WITH THE ARMS RIPPED O-OFF.]]',
+        poster = '[[A MOTIVATIONAL POSTER, NOT FROM P-PIKE]]',
+        poster2 = '[[IT DEPICTS AN AN-ANTHROPOMORPHIC OCEAN WAVE WITH THE T-TEXT \"SEAS THE DAY\"]]',
+        poster3 = '[[ITS EMBARASSING TO A-ADMIT IT MAKES M-ME CHUCKLE EVERY TIME.]]',
     },
     closet = {
-        ctext1 = '[[A FILE CABINET, FILLED WITH FILES USUALLY RESERVED FOR THE HIGHER UPS. IVE NEVER SEEN THESE B-BEFORE...]]',
-        ctext12 = '[[THIS ONE SEEMS TO CONTAIN ME A-AND MY ELITE\'S BASE INFORMATION.]]',
-        ctext13 = {'[[SEARCH THROUGH THIS CABINET?]]', "YES", "NO"},
-        ctext2 = '[[A FILE CABINET, FILLED WITH FILES USUALLY RESERVED FOR THE HIGHER UPS. IVE NEVER SEEN THESE B-BEFORE...]]',
-        ctext22 = '[[THIS ONE SEEMS TO CONTAIN OTHER INFORMATION ABOUT THE REGIMENT, AND OLD LOGS FROM THE HIGHER UPS.]]',
-        ctext23 = {'[[SEARCH THROUGH THIS CABINET?]]', "YES", "NO"},
+        baseinfo = '[[A FILE CABINET, FILLED WITH FILES USUALLY RESERVED FOR THE HIGHER UPS. IVE NEVER SEEN THESE B-BEFORE...]]',
+        baseinfo2 = '[[THIS ONE SEEMS TO CONTAIN ME A-AND MY ELITE\'S BASE INFORMATION.]]',
+        baseinfo3 = {'[[SEARCH THROUGH THIS CABINET?]]', "YES", "NO"},
+        reginfo = '[[A FILE CABINET, FILLED WITH FILES USUALLY RESERVED FOR THE HIGHER UPS. IVE NEVER SEEN THESE B-BEFORE...]]',
+        reginfo2 = '[[THIS ONE SEEMS TO CONTAIN OTHER INFORMATION ABOUT THE REGIMENT, AND OLD LOGS FROM THE HIGHER UPS.]]',
+        reginfo3 = {'[[SEARCH THROUGH THIS CABINET?]]', "YES", "NO"},
     },
     stairs = {
 
     },
     croom = {
-        ctext1 = '[[MY COMPANY MANDATED P-PERSONAL COMPUTER.]]',
-        ctext12 = {'[[LOG IN?]]', "YES", "NO"},
-        ctext2 = '[[A BOX FILLED OF W-WIRES AND OTHER DITRITUS, PROVES VERY USEFUL.]]',
-        ctext3i = love.graphics.newImage('assets/1920x1080.png'),
-        ctext31 = '[[ITS THE WINDOW ITS THE WINDOW WINDOW WINDOW WINDOW]]',
-        ctext32 = '.C. [[TESTING]]',
-        ctext33 = '.C. ^C [[TESTING2]]',
-        ctext4 = '[[MY REFUELING STATION, I D-DON\'T REQUIRE IT RIGHT N-NOW]]',
-        ctext5 = '.C. [[target]]',
-        ctext6 = '.R. [[papers]]',
+        computer = '[[MY COMPANY MANDATED P-PERSONAL COMPUTER.]]',
+        computer2 = {'[[LOG IN?]]', "YES", "NO"},
+        box = '[[A BOX FILLED OF W-WIRES AND OTHER DITRITUS, PROVES VERY USEFUL.]]',
+        windowi = love.graphics.newImage('assets/1920x1080.png'),
+        window1 = '[[ITS THE WINDOW ITS THE WINDOW WINDOW WINDOW WINDOW]]',
+        window2 = '.C. [[TESTING]]',
+        window3 = '.C. ^C [[TESTING2]]',
+        refuel = '[[MY REFUELING STATION, I D-DON\'T REQUIRE IT RIGHT N-NOW]]',
+        pinboard = '[[MY P-PINBOARD FOLLOWING THE M-MAIN TARGET.]]',
+        pinboard2 = '[[W-WE\'VE BEEN CHASING HIM FOR S-SO LONG. AND I\'LL FINALLY BE THE ONE TO DO HIM I-IN.]]',
+        pinboard3 = '[[W-WHEN I HAVE HIS HEAD ON A STICK, THEN IT\'LL ALL BE OK.]]',
+        papers = '[[T-THESE USED TO BE ON THE PINBOARD BUT THEY WERE...]] [] [[I-IRRELEVANT.]]',
     },
     atroom = {
-
+        computer = '[[ARCTREAD\'S COMPANY MANDATED P-PERSONAL COMPUTER.]]',
+        computer2 = {'[[LOG IN?]]', "YES", "NO"},
     },
     tsroom = {
-
+        computer = '[[TUNGSTEN\'S COMPANY MANDATED P-PERSONAL COMPUTER.]]',
+        computer2 = {'[[LOG IN?]]', "YES", "NO"},
     },
     rroom = {
-
+        computer = '[[RHENIUM\'S COMPANY MANDATED P-PERSONAL COMPUTER.]]',
+        computer2 = {'[[LOG IN?]]', "YES", "NO"},
     },
 
 
     arctread = {
-        atext1 = ".A. {{HELLO :: CALLISTO.}}",
-        atext2 = {'.A. {{READY FOR US :: TO LEAVE NOW?}}', "YES", "NO"},
+        rollcallgreeting1 = ".A. {{HELLO :: CALLISTO.}}",
+        rollcallgreeting12 = {'.A. {{READY FOR US :: TO LEAVE NOW?}}', "YES", "NO"},
     },
     tungsten = {
-        tstext1 = ".T. >Greetings, General Callisto. How are you today?", 
-        tstext2 = {'.T. >Are we ready to leave?', "YES", "NO"},
+        rollcallgreeting1 = ".T. >Greetings, General Callisto. How are you today?", 
+        rollcallgreeting12 = {'.T. >Are we ready to leave?', "YES", "NO"},
     },
     rhenium = {
-        rtext1 = ".R. howdy cali! / whats up?",
-        rtext2 = {'.R. wanna send us out now?', "YES", "NO"},
+        rollcallgreeting1 = ".R. howdy cali! / whats up?",
+        rollcallgreeting12 = {'.R. wanna send us out now?', "YES", "NO"},
     },
 }

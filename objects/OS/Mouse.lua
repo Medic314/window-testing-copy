@@ -23,23 +23,22 @@ function Mouse:update(dt)
     if input:pressed('lmb') then
         self.colliders = self.area.world:queryCircleArea(self.x, self.y, 2, {'Window'})
         if self.colliders[1] then
-            if #self.colliders > 1 then
-                for i=1, #self.colliders do
-                    for j=1, #self.colliders do
-                        --print(#self.colliders)
-                        if findFocus(self.colliders[i].id) ~= findFocus(self.colliders[j].id) then
-                            if findFocus(self.colliders[i].id) > findFocus(self.colliders[j].id) then
-                                updateFocus(self.colliders[i].id)
-                            else
-                                updateFocus(self.colliders[j].id)
-                            end
-                        end
-                    end
+            local focusedId = self.colliders[1].id
+            local highestFocus = findFocus(focusedId)
+            for i = 2, #self.colliders do
+                local colliderId = self.colliders[i].id
+                local colliderFocus = findFocus(colliderId)
+                if colliderFocus > highestFocus then
+                    focusedId = colliderId
+                    highestFocus = colliderFocus
                 end
-            else
-                updateFocus(self.colliders[1].id)
             end
+            updateFocus(focusedId)
         end
+    end
+    if notifpulse then 
+        self.area:addGameObject('Notification', 0, 0, {text=notifpulse})
+        notifpulse = nil
     end
 end
 

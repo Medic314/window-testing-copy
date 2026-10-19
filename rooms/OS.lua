@@ -36,13 +36,27 @@ function OS:init()
 
     --self.area:addGameObject('Window', 0, 0)
     self.area:addGameObject('Mouse', 0, 0)
-    self.area:addGameObject('Background', 0, 0)
-    self.area:addGameObject('Button', 200, 200)
-    self.area:addGameObject('Button', 300, 200, {type='p'})
-    self.area:addGameObject('Button', 400, 200, {type='m', mID = 'memo'})
-    self.area:addGameObject('Button', 400, 300, {type='m', mID = 'email'})
-    self.area:addGameObject('Button', 600, 200, {type='e'})
-    --self.area:addGameObject('Button', 500, 200, {type='g'})
+
+    if OSD == 'Cali' then
+        self.area:addGameObject('Background', 0, 0)
+        self.area:addGameObject('Button', 200, 200)
+        self.area:addGameObject('Button', 300, 200, {type='p'})
+        self.area:addGameObject('Button', 400, 200, {type='m', mID = 'memo', memos2 = {{text=TT.COST.memo1, title="Cursed"}}})
+        self.area:addGameObject('Button', 400, 300, {type='m', mID = 'email'})
+        self.area:addGameObject('Button', 600, 200, {type='e'})
+    elseif OSD == 'At' then
+        self.area:addGameObject('Button', 600, 200, {type='e'})
+        self.area:addGameObject('Button', 200, 200, {type='m', mID = 'memo'})
+        self.area:addGameObject('Button', 300, 200, {type='m', mID = 'email'})
+    elseif OSD == 'Ts' then
+        self.area:addGameObject('Button', 600, 200, {type='e'})
+        self.area:addGameObject('Button', 200, 200, {type='m', mID = 'memo', password = 'tungsten'})
+        self.area:addGameObject('Button', 300, 200, {type='m', mID = 'memo', password = 'tungsten2'})
+        self.area:addGameObject('Button', 400, 200, {type='m', mID = 'memo', password = 'tungsten3'})
+    elseif OSD == 'R' then
+        self.area:addGameObject('Button', 600, 200, {type='e'})
+        self.area:addGameObject('Button', 200, 200, {type='g'})
+    end
     
     self.area:addGameObject('Transition', 0, 0, {type = 'room'})
 end

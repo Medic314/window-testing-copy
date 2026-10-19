@@ -16,11 +16,14 @@ function CComment:new(area, x, y, opts)
     self.revealedChars = 0
     self.revealTimer = 0
     self.totalChars = 0
-    print(self.input)
 end
 
 function CComment:update(dt)
     local response = CT[self.input] or ''
+    if response[2] then
+        self.func = response[2]
+        response = response[1]
+    end
     if response ~= self.text then
         self.text = response
         local _, lines = self.font:getWrap(self.text, self.maxWidth - self.padding * 2)
@@ -47,6 +50,7 @@ function CComment:update(dt)
     if input:pressed('lmb') then
         self.colliders = self.area.world:queryRectangleArea(self.x, self.y, self.w, self.h, {'Mouse'})
         if self.colliders[1] then
+            if self.func then self.func() end
             self.dead = true
         end
     end

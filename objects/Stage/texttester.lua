@@ -10,6 +10,17 @@ function Texttester:new(area, x, y, opts)
     self.H = opts.h or 50
     self.idr = opts.idr or self.id
     self.textline = opts.textline or nil
+    if self.textline[1] == TT.croom.computer then
+        self.data = 'Cali'
+    elseif self.textline[1] == TT.tsroom.computer then
+        self.data = 'Ts'
+    elseif self.textline[1] == TT.atroom.computer then
+        self.data = 'At'
+    elseif self.textline[1] == TT.rroom.computer then
+        self.data = 'R'
+    else
+        self.data = nil
+    end
     self.c = opts.c or true
 
     if self.c == true then 
@@ -36,7 +47,7 @@ function Texttester:update(dt)
     if self.icollider.interacted then
         print('wagh')
         self.icollider.interacted = false
-        self.area:addGameObject('Textbox', camera.x, camera.y, {textline = self.textline})
+        self.area:addGameObject('Textbox', camera.x, camera.y, {textline = self.textline, data = self.data})
     end
 end
 

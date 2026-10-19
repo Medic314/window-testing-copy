@@ -61,12 +61,14 @@ function Textbox:resetReveal()
     end
 end
 
-function Textbox:wrapText(text, maxWidth)
+function Textbox:wrapText(text, maxWidth, p)
     local font = love.graphics.getFont()
     local lines = {}
     local currentLine = ""
-    self.portrait = nil
-    self.l = nil
+    if not p then 
+        self.portrait = nil 
+        self.l = nil
+    end
 
     for word in text:gmatch("%S+") do
         if word ~= '[]' and word ~= '[[]]' and word ~= '.C.' and word ~= '.A.' and word ~= '.T.' and word ~= '.R.' and word ~= '^C' then
@@ -203,7 +205,7 @@ function Textbox:update(dt)
                     self.lines = self:wrapText(self.text, (self.bounds.x/4)*3-25)
                     self.elines = {}
                     for i=1, #self.options do
-                        table.insert(self.elines, self:wrapText(self.options[i], self.bounds.x/2-25))
+                        table.insert(self.elines, self:wrapText(self.options[i], self.bounds.x/2-25, true))
                     end
                 else
                     if type(self.text) == 'string' then

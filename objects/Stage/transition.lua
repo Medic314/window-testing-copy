@@ -8,12 +8,14 @@ function Transition:new(area, x, y, opts)
     self.W, self.H = 5000, 5000
     self.A = {A = 0}
     self.type = opts.type or 'door'
+    local i
+    if self.type == 'time' then i = 1.5 else i = 1 end
     doorlock = true
     if self.type == 'door' then timer:tween(0.15, self.A, {A = 1}, 'in-quad') else self.A.A = 1 end
-    timer:after(0.15, function()
+    timer:after(0.15*i, function()
         self.A.A = 1
-    timer:tween(0.175, self.A, {A = 0}, 'in-quad')
-    timer:after(0.175, function() self.dead = true doorlock = nil end) end)
+    timer:tween(0.175*i, self.A, {A = 0}, 'in-quad')
+    timer:after(0.175*i, function() self.dead = true doorlock = nil end) end)
 end
 
 function Transition:update(dt)

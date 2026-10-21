@@ -115,6 +115,46 @@ function mWindow:update(dt)
     if self.scroll > 0 then self.scroll = 0 end
     if self.scroll < -mScroll then self.scroll = -mScroll end
 
+    self.hoveredMemo = nil
+    self.hoveredMemoList = nil
+    self.hoveredEmailTab = nil
+    if Focus == self.id and not self.locked then
+        if sidebarWidth > 0 then
+            for index = 1, #self.memoLists do
+                local rowY = self.y + 48 + (index - 1) * (self.sidebarButtonHeight + self.sidebarButtonGap) + self.sidebarScroll
+                if rowY + self.sidebarButtonHeight >= self.y + 42 and rowY <= self.y + self.bounds.y - 8
+                    and GMX >= self.x + 12 and GMX <= self.x + sidebarWidth - 12
+                    and GMY >= rowY and GMY <= rowY + self.sidebarButtonHeight then
+                    self.hoveredMemoList = index
+                    break
+                end
+            end
+        end
+        if self.mID == 'email' then
+            for index = 1, math.min(3, #self.memoLists) do
+                local tabX = self.x + self.emailTabPadding + (index - 1) * (self.emailTabWidth + self.emailTabGap)
+                local tabY = self.y + 3
+                if GMX >= tabX and GMX <= tabX + self.emailTabWidth
+                    and GMY >= tabY and GMY <= tabY + self.emailTabHeight then
+                    self.hoveredEmailTab = index
+                    break
+                end
+            end
+        end
+        local buttonWidth = self.bounds.x - sidebarWidth - self.memoPadding * 2
+        local buttonX = self.x + sidebarWidth + self.memoPadding
+        local buttonY = self.y + 64
+        for index = 1, #self.memos do
+            local currentButtonY = buttonY + (index - 1) * (self.memoButtonHeight + self.memoButtonGap) + self.scroll
+            if currentButtonY >= self.y + 58 and currentButtonY + self.memoButtonHeight <= self.y + self.bounds.y
+                and GMX >= buttonX and GMX <= buttonX + buttonWidth
+                and GMY >= currentButtonY and GMY <= currentButtonY + self.memoButtonHeight then
+                self.hoveredMemo = index
+                break
+            end
+        end
+    end
+
     if input:pressed('lmb') then
         if self.colliders[1] then
             self.MX2, self.MY2 = GMX - self.x, GMY - self.y
@@ -202,7 +242,9 @@ function mWindow:update(dt)
                 local buttonY = self.y + 64
                 for index, memo in ipairs(self.memos) do
                     local currentButtonY = (buttonY + (index - 1) * (self.memoButtonHeight + self.memoButtonGap)) + self.scroll
-                    if GMX >= buttonX and GMX <= buttonX + buttonWidth and GMY >= currentButtonY and GMY <= currentButtonY + self.memoButtonHeight then
+                    if currentButtonY >= self.y + 58 and currentButtonY + self.memoButtonHeight <= self.y + self.bounds.y
+                        and GMX >= buttonX and GMX <= buttonX + buttonWidth
+                        and GMY >= currentButtonY and GMY <= currentButtonY + self.memoButtonHeight then
                         local image = memoImage(memo)
                         if self.mID == 'memo' and image then
                             local images, selectedimage = {}, 1
@@ -216,10 +258,15 @@ function mWindow:update(dt)
                             self.area:addGameObject('pWindow', self.x, self.y, {
                                 title = memoField(memo, 'title', 'Image'),
                                 images = images,
-                                selectedimage = selectedimage
+                                selectedimage = selectedimage,
+                                openAnimation = true
                             })
                         else
-                            self.area:addGameObject('tWindow', self.x, self.y, {text = memoField(memo, 'text', ''), title = memoField(memo, 'title', 'Message')})
+                            self.area:addGameObject('tWindow', self.x, self.y, {
+                                text = memoField(memo, 'text', ''),
+                                title = memoField(memo, 'title', 'Message'),
+                                openAnimation = true
+                            })
                         end
                         break
                     end
@@ -308,7 +355,9 @@ function mWindow:draw()
     drawWrappedText(self.title, self.x + 10, top + 8, width - 70, titleHeight - 12)
     local closeX, closeY = self.x + width - 46, top + 4
     local closeColor = self.mID == 'email' and {0.03, 0.48, 0.43} or {0.20, 0.42, 0.62}
-    love.graphics.setColor(self.closebuttondown and dark or closeColor)
+    local closeHovered = Focus == self.id and GMX >= closeX and GMX <= closeX + 42 and GMY >= closeY and GMY <= closeY + 42
+    local closeHoverColor = self.mID == 'email' and {0.05, 0.58, 0.52} or {0.27, 0.52, 0.72}
+    love.graphics.setColor(self.closebuttondown and dark or (closeHovered and closeHoverColor or closeColor))
     love.graphics.rectangle('fill', closeX, closeY, 42, 42)
     love.graphics.setColor(white)
     love.graphics.setLineWidth(3)
@@ -330,6 +379,11 @@ function mWindow:draw()
                     love.graphics.rectangle('fill', self.x + 12, rowY, sidebarWidth - 24, self.sidebarButtonHeight)
                     love.graphics.setColor(0.94, 0.96, 0.98)
                     drawWrappedText('> ' .. list.title, self.x + 20, rowY + 3, sidebarWidth - 48, self.sidebarButtonHeight - 6)
+                elseif index == self.hoveredMemoList then
+                    love.graphics.setColor(0.13, 0.21, 0.29)
+                    love.graphics.rectangle('fill', self.x + 12, rowY, sidebarWidth - 24, self.sidebarButtonHeight)
+                    love.graphics.setColor(0.88, 0.92, 0.95)
+                    drawWrappedText(list.title, self.x + 20, rowY + 3, sidebarWidth - 48, self.sidebarButtonHeight - 6)
                 else
                     love.graphics.setColor(0.61, 0.67, 0.71)
                     drawWrappedText(list.title, self.x + 20, rowY + 3, sidebarWidth - 48, self.sidebarButtonHeight - 6)
@@ -357,11 +411,13 @@ function mWindow:draw()
             local list = self.memoLists[index]
             if index == self.activeMemoList then
                 love.graphics.setColor(0.03, 0.45, 0.41)
+            elseif index == self.hoveredEmailTab then
+                love.graphics.setColor(0.05, 0.32, 0.30)
             else
                 love.graphics.setColor(0.08, 0.13, 0.14)
             end
             love.graphics.rectangle('fill', tabX, tabY, self.emailTabWidth, self.emailTabHeight)
-            love.graphics.setColor(index == self.activeMemoList and {0.94, 0.97, 0.96} or {0.66, 0.74, 0.73})
+            love.graphics.setColor(index == self.activeMemoList and {0.94, 0.97, 0.96} or (index == self.hoveredEmailTab and {0.84, 0.91, 0.90} or {0.66, 0.74, 0.73}))
             drawWrappedText(list.title, tabX + 8, tabY + 8, self.emailTabWidth - 16, self.emailTabHeight - 10)
         end
     end
@@ -373,7 +429,7 @@ function mWindow:draw()
         local currentButtonY = (buttonY + (index - 1) * (self.memoButtonHeight + self.memoButtonGap))+self.scroll
         if (currentButtonY + self.memoButtonHeight <= self.y + self.bounds.y) and (currentButtonY >= self.y + 58) then
             if self.mID == 'email' then
-                love.graphics.setColor(0.12, 0.14, 0.16)
+                love.graphics.setColor(index == self.hoveredMemo and {0.18, 0.21, 0.23} or {0.12, 0.14, 0.16})
                 love.graphics.rectangle('fill', buttonX, currentButtonY, buttonWidth, self.memoButtonHeight)
                 love.graphics.setColor(0.03, 0.45, 0.41)
                 love.graphics.rectangle('fill', buttonX, currentButtonY, 6, self.memoButtonHeight)
@@ -384,9 +440,9 @@ function mWindow:draw()
                 love.graphics.setColor(0.58, 0.63, 0.65)
             else
                 local image = memoImage(memo)
-                love.graphics.setColor(0.12, 0.14, 0.17)
+                love.graphics.setColor(index == self.hoveredMemo and {0.17, 0.20, 0.24} or {0.12, 0.14, 0.17})
                 love.graphics.rectangle('fill', buttonX, currentButtonY, buttonWidth, self.memoButtonHeight)
-                love.graphics.setColor(0.30, 0.35, 0.39)
+                love.graphics.setColor(index == self.hoveredMemo and {0.50, 0.66, 0.75} or {0.30, 0.35, 0.39})
                 love.graphics.rectangle('line', buttonX, currentButtonY, buttonWidth, self.memoButtonHeight)
                 love.graphics.setColor(0.50, 0.72, 0.88)
                 love.graphics.print(image and '[IMG]' or '[TXT]', buttonX + 12, currentButtonY + 18)

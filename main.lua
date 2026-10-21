@@ -28,11 +28,12 @@ function gamestate()
     GameState = {
         sDay = Day,
         sTime = Time,
+        sGV = GV,
     }
     writeSaveData()
 end
 
-function love.load()
+function love.load() 
     love.graphics.setDefaultFilter('nearest', 'nearest')
     love.graphics.setLineStyle('rough')
     math.randomseed(os.time())

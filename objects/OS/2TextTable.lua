@@ -13,7 +13,9 @@ TT = {
     },
 
     COST = {
-        memo1 = "Callisto is a *R* Stupid Dumb Baby. *RE*"
+        memo1 = "Callisto is a *R* Stupid Dumb Baby. *RE*",
+
+        samEmail = "From: Sam [] Subject: Mission Statement [] To: General Callisto [[]] Dear General Callisto, [] As you know, you will be sent on a mission to apprehend *R* our Main Target in 5 days. *RE* However, reports have came in that someone in your regiment is a traitor. You hereby have access to all files, personal or classified, housed in your Regiment. Find the traitor and leave a note on who it is for out 'exterminators' to take care of the problem. [[]] Yours Truly, [] Sam"
     },
     AOST = {
 
@@ -36,6 +38,7 @@ TT = {
         trash = "[[A T-TRASH CAN.]]",
 
         rollcallstart = "You hold down the intercom next to your door. [] [[WILL ALL ELITES PLEASE R-REPORT TO THE MEETING ROOM FOR R-ROLLCALL?]]",
+        rollcallerror = "[[I-I SHOULD SPEAK TO THE OTHERS B-BEFORE SENDING THEM OUT.]]",
     },
     hallway = {
         Alocked = '[[IT\'S LOCKED.]]',
@@ -73,6 +76,8 @@ TT = {
         pinboard2 = '[[W-WE\'VE BEEN CHASING HIM FOR S-SO LONG. AND I\'LL FINALLY BE THE ONE TO DO HIM I-IN.]]',
         pinboard3 = '[[W-WHEN I HAVE HIS HEAD ON A STICK, THEN IT\'LL ALL BE OK.]]',
         papers = '[[T-THESE USED TO BE ON THE PINBOARD BUT THEY WERE...]] [] [[I-IRRELEVANT.]]',
+
+        locked = '[[I-I SHOULD CHECK MY EMAIL F-FIRST.]]',
     },
     atroom = {
         computer = '[[ARCTREAD\'S COMPANY MANDATED P-PERSONAL COMPUTER.]]',
@@ -90,14 +95,28 @@ TT = {
 
     arctread = {
         rollcallgreeting1 = ".A. {{HELLO :: CALLISTO.}}",
-        rollcallgreeting12 = {'.A. {{READY FOR US :: TO LEAVE NOW?}}', "YES", "NO"},
+        rollcallgreeting12 = ".A. {{WE'RE READY FOR TODAYS :: EXCERSION WHENEVER YOU ARE.}}",
+        rollcallgreeting13 = {'.A. {{READY FOR US :: TO LEAVE NOW?}}', "YES", "NO"},
     },
     tungsten = {
-        rollcallgreeting1 = ".T. >Greetings, General Callisto. How are you today?", 
-        rollcallgreeting12 = {'.T. >Are we ready to leave?', "YES", "NO"},
+        rollcallgreeting1 = ".T. >Greetings, General Callisto.", 
+        rollcallgreeting12 = ".T. >As you know, the three of us are set for an exploration mission for today.", 
+        rollcallgreeting13 = ".T. >We expect you to stay as the homestead and call us in when the time comes, as always.", 
+        rollcallgreeting14 = {'.T. >Are we ready to leave?', "YES", "NO"},
     },
     rhenium = {
         rollcallgreeting1 = ".R. howdy cali! / whats up?",
-        rollcallgreeting12 = {'.R. wanna send us out now?', "YES", "NO"},
+        rollcallgreeting12 = ".R. y'know, / my offer still stands, / if you ever want to replace me on one of these missions i'd be more than willing!",
+        rollcallgreeting13 = {'.R. Whadya think?', "Trying to get out of work?", "I'll keep it in mind."},
+
+        rollcallgreeting141 = ".C. [[T-TRYING TO GET OUT OF W-WORK, RHENIUM?]]",
+        rollcallgreeting142 = ".R. oh please i would NEVER!",
+        rollcallgreeting143 = ".R. ok maybe a litte...",
+
+        rollcallgreeting151 = ".C. [[I'LL K-KEEP IT IN MIND, RHENIUM.]]",
+        rollcallgreeting152 = ".R. that's your way of saying no, / isnt it...",
+        rollcallgreeting153 = ".R. whatevs...",
+
+        rollcallgreeting16 = {'.R. wanna send us out now?', "YES", "NO"},
     },
 }

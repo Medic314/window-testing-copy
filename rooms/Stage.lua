@@ -22,9 +22,23 @@ function Stage:init()
         CR = SaveState.Room
         print(PX, PY, CR)
     end
+    dGV = {
+        day1 = {
+            pre = {
+                sawEmail = false,
+            },
+            rollcall = {
+                ATspoke = false,
+                Rspoke = false,
+                TSspoke = false,
+            },
+        },
+    }
+    if not GV then GV = dGV end
     if GameState then
         Day = GameState.sDay or 1
         Time = GameState.sTime or 1
+        if not GV then GV = GameState.sGV or dGV end
         if not SaveState then
             if Time == 1 then
                 PX, PY = -219, 303

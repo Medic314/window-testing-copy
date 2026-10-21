@@ -11,6 +11,7 @@ function Textbox:new(area, x, y, opts)
     love.graphics.setFont(ST.f.alphabetaBig)
     self.charsize = 16
     self.bounds = {x = self.w, y = self.h}
+    self.optionWidth = self.bounds.x/4+25
     self.imagelock = false
 
     self.func = opts.func or nil
@@ -18,33 +19,95 @@ function Textbox:new(area, x, y, opts)
     self.textline = opts.textline or {TT.placeholder.ptext1, TT.placeholder.ptext2, TT.placeholder.ptext3, TT.placeholder.ptext4}
     self.data = opts.data or nil
     self.selectedtext = 1
-    self.text = self.textline[self.selectedtext]
     self.portrait = nil
-    if self.text[1] then
-        self.options = {}
-        self.marker = 1
-        for i=1, #self.text+1 do
-            table.insert(self.options, self.text[i+1])
-            print(self.options[i])
-        end
-        self.text = self.text[1]
-    elseif type(self.text) ~= "string" then
-        print(type(self.text))
-        self.imagelock = true
-        self.i = self.text
+    self:showStep(self.textline[self.selectedtext])
+end
+
+function Textbox:parseChoice(step)
+    if type(step) ~= "table" or type(step[1]) ~= "string" or type(step[2]) ~= "string" then
+        return nil
     end
+
+    local options = {}
+    for i=2, #step do
+        if type(step[i]) ~= "string" then return nil end
+        table.insert(options, step[i])
+    end
+    return step[1], options
+end
+
+function Textbox:showStep(step)
+    local prompt, options = self:parseChoice(step)
+    self.options = options
+    self.marker = options and 1 or nil
+    self.elines = nil
+    self.imagelock = false
+    self.i = nil
+
+    if options then
+        self.text = prompt
+    else
+        self.text = step
+        if type(step) ~= "string" then
+            self.imagelock = true
+            self.i = step
+        end
+    end
+
     if type(self.text) == "string" then
         if self.options then
             self.lines = self:wrapText(self.text, (self.bounds.x/4)*3-25)
             self.elines = {}
             for i=1, #self.options do
-                table.insert(self.elines, self:wrapText(self.options[i], self.bounds.x/2-25))
+                table.insert(self.elines, self:wrapText(self.options[i], self.optionWidth, true))
             end
         else
             self.lines = self:wrapText(self.text, self.bounds.x)
         end
+    else
+        self.lines = {}
     end
     self:resetReveal()
+end
+
+function Textbox:finish(callFunc)
+    movelock, inputlock = false, false
+    if callFunc ~= false and self.func then self.func() end
+    self.dead = true
+    self.imagelock = false
+end
+
+function Textbox:handleAction(step)
+    if type(step) ~= "table" then return false end
+
+    if step[1] == 'OS' then
+        if self.data then OSD = self.data end
+        self:finish()
+        gotoRoom('OS')
+        savestate()
+        movelock, inputlock = false, false
+        return true
+    elseif step[1] == 'Folders' then
+        if self.data then FolderD = self.data end
+        self:finish()
+        gotoRoom('Folders')
+        savestate()
+        return true
+    elseif step[1] == 'PassTime' then
+        if Day == 1 and Time == 2 then
+            self:finish()
+            if GV.day1.rollcall.Rspoke and GV.day1.rollcall.TSspoke and GV.day1.rollcall.ATspoke then
+                timePulse = true
+                gamestate()
+                return true
+            else
+                self.area:addGameObject('Textbox', camera.x, camera.y, {textline = {TT.main.rollcallerror}})
+            end
+        end
+    elseif step[1] == nil then
+        self:finish()
+    end
+    return false
 end
 
 function Textbox:resetReveal()
@@ -147,74 +210,45 @@ function Textbox:update(dt)
             self.revealedChars = self.totalChars
             self.revealTimer = 0
         else
-        self.selectedtext = self.selectedtext + 1
-        local STOP = false
-        if self.selectedtext > #self.textline then
-            movelock, inputlock = false, false
-            if self.func then self.func() end
-            self.dead = true
-            self.imagelock = false
-        else
             if self.options then
-                self.selectedtext = self.selectedtext - 1
-                self.textline = self.textline[self.selectedtext+self.marker]
-                if self.textline == nil then STOP = true movelock, inputlock = false, false self.dead = true self.imagelock = false end
-                if not STOP then
-                    for i=1, #self.textline do
-                        print(self.textline[i])
-                        if self.textline[i] == 'OS' then
-                            if self.data then
-                                OSD = self.data
-                            end
-                            gotoRoom('OS')
-                            savestate()
-                            movelock, inputlock = false, false
-                            STOP = true
-                        elseif self.textline[i] == 'Folders' then
-                            if self.data then
-                                FolderD = self.data
-                            end
-                            gotoRoom('Folders')
-                            savestate()
-                            movelock, inputlock = false, false
-                            STOP = true
-                        elseif self.textline[i] == 'PassTime' then
-                            timePulse = true
-                            self.dead = true
-                            self.imagelock = false
-                            gamestate()
-                            movelock, inputlock = false, false
-                            STOP = true
+                local choiceIndex = self.selectedtext
+                local nextStep = self.textline[choiceIndex + 1]
+                local isBranchGroup = type(nextStep) == "table" and #nextStep == #self.options
+                if isBranchGroup then
+                    for i=1, #nextStep do
+                        if type(nextStep[i]) ~= "table" then
+                            isBranchGroup = false
+                            break
                         end
                     end
                 end
-            end
-            if not STOP then
-                self.options = nil
-                self.text = self.textline[self.selectedtext]
-                if self.text[1] then
-                    self.options = {}
-                    self.marker = 1
-                    for i=1, #self.text+1 do
-                        table.insert(self.options, self.text[i+1])
-                        print(self.options[i])
-                    end
-                    self.text = self.text[1]
-                end
-                if self.options then
-                    self.lines = self:wrapText(self.text, (self.bounds.x/4)*3-25)
-                    self.elines = {}
-                    for i=1, #self.options do
-                        table.insert(self.elines, self:wrapText(self.options[i], self.bounds.x/2-25, true))
-                    end
+
+                if isBranchGroup then
+                    self.textline = nextStep[self.marker]
+                    self.selectedtext = 1
+                    self:showStep(self.textline[self.selectedtext])
                 else
-                    if type(self.text) == 'string' then
-                        self.lines = self:wrapText(self.text, self.bounds.x)
+                    local selectedStep = self.textline[choiceIndex + self.marker]
+                    if not selectedStep then
+                        self:finish()
+                    elseif self:handleAction(selectedStep) then
+                        return
+                    else
+                        self.selectedtext = choiceIndex + self.marker
+                        self:showStep(selectedStep)
                     end
                 end
-                self:resetReveal()
+            else
+                self.selectedtext = self.selectedtext + 1
+                local nextStep = self.textline[self.selectedtext]
+                if not nextStep then
+                    self:finish()
+                elseif self:handleAction(nextStep) then
+                    return
+                else
+                    self:showStep(nextStep)
+                end
             end
-        end
         end
     end
 end
@@ -245,16 +279,20 @@ function Textbox:draw()
             remainingChars = remainingChars - #line
         end
         if self.options then
-            local markerh = ((self.y + (1-1) * font:getHeight())+1) + (self.marker-1)*75
-            love.graphics.print('>', self.x+((self.bounds.x/4)*3), markerh)
+            local optionOffset = 0
             for j=1, #self.elines do
+                local optionY = self.y + optionOffset
+                if j == self.marker then
+                    love.graphics.print('>', self.x+((self.bounds.x/4)*3), optionY+1)
+                end
                 for i, line in ipairs(self.elines[j]) do
-                    local liney = ((self.y + (i - 1) * font:getHeight())+1)
+                    local liney = optionY + (i - 1) * font:getHeight() + 1
                     if liney < self.y + self.bounds.y and liney > self.y then
-                        love.graphics.print(line:sub(1, math.min(#line, math.max(0, remainingChars))), self.x+((self.bounds.x/4)*3)+25, liney+(j-1)*75)
+                        love.graphics.print(line:sub(1, math.min(#line, math.max(0, remainingChars))), self.x+((self.bounds.x/4)*3)+25, liney)
                     end
                     remainingChars = remainingChars - #line
                 end
+                optionOffset = optionOffset + 75 + math.max(0, #self.elines[j]-1)*font:getHeight()
             end
         end
     end

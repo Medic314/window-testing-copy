@@ -140,7 +140,7 @@ function prRooms:new(area, x, y, opts)
 
         self.area:addGameObject('Texttester', 382-150, -200, {idr = self.id, textline = {TT.croom.computer, TT.croom.computer2, {'OS', nil}}})
 
-        self.area:addGameObject('Door', 0-25, -532+50, {room = 'main', idr=self.id, position = {-200+25, ((1080*0.8)/2)-150}})
+        if not GV.day1.pre.sawEmail then self.area:addGameObject('Texttester', 0-25, -532+50, {idr = self.id, textline = {TT.croom.locked}}) else self.area:addGameObject('Door', 0-25, -532+50, {room = 'main', idr=self.id, position = {-200+25, ((1080*0.8)/2)-150}}) end
     elseif self.rid == 'exit' then
     end
 end

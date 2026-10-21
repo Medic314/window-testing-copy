@@ -42,7 +42,7 @@ function OS:init()
         self.area:addGameObject('Button', 200, 200)
         self.area:addGameObject('Button', 300, 200, {type='p'})
         self.area:addGameObject('Button', 400, 200, {type='m', mID = 'memo', memos2 = {{text=TT.COST.memo1, title="Cursed"}}})
-        self.area:addGameObject('Button', 400, 300, {type='m', mID = 'email'})
+        self.area:addGameObject('Button', 400, 300, {type='m', mID = 'email', memos = {{text=TT.COST.samEmail, title = "Mission Statement", sender = "Sam"}}})
         self.area:addGameObject('Button', 600, 200, {type='e'})
     elseif OSD == 'At' then
         self.area:addGameObject('Button', 600, 200, {type='e'})

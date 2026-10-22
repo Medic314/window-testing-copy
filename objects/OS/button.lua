@@ -3,8 +3,8 @@ Button = GameObject:extend()
 function Button:new(area, x, y, opts)
     Button.super.new(self, area, x, y, opts)
     self.layer = 'main layer'
-    self.w = opts.w or 50
-    self.h = opts.h or 50
+    self.w = opts.w or 100
+    self.h = opts.h or 100
     self.x = x
     self.y = y
     self.type = opts.type or 't'
@@ -14,6 +14,9 @@ function Button:new(area, x, y, opts)
     self.memos3 = opts.memos3
     self.password = opts.password
     self.passwordKey = opts.passwordKey
+    self.title = opts.title or 'WHat'
+    print(self.type)
+    print(self.mID)
 
     --[[self.collider = self.area.world:newRectangleCollider(self.x, self.y, self.w, self.h)
     self.collider:setCollisionClass("Desktop Button")
@@ -42,5 +45,21 @@ function Button:update(dt)
 end
 
 function Button:draw()
-    love.graphics.rectangle('fill', self.x, self.y, self.w, self.h)
+    if self.type == 'm' and self.mID == 'memo' then
+        love.graphics.draw(ST.files, self.x, self.y)
+    elseif self.type == 'm' and self.mID == 'email' then
+        love.graphics.draw(ST.email, self.x, self.y)
+    elseif self.type == 't' then
+        love.graphics.draw(ST.txt, self.x, self.y)
+    elseif self.type == 'p' then
+        love.graphics.draw(ST.image, self.x, self.y)
+    else
+        love.graphics.rectangle('fill', self.x, self.y, self.w, self.h)
+    end
+    if self.type ~= 'e' then
+        love.graphics.draw(ST.shortcut, self.x, self.y+75)
+    end
+    love.graphics.setFont(ST.f.alphabetaSmall)
+    if self.title then love.graphics.printf(self.title, self.x-10, self.y+100-5, 125, 'center') end
+    love.graphics.setFont(ST.f.alphabeta)
 end

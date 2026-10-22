@@ -12,4 +12,10 @@ ST = {
     ATP = love.graphics.newImage('assets/arctreadportrait.png'),
     TSP = love.graphics.newImage('assets/tungstenportrait.png'),
     RP = love.graphics.newImage('assets/rheniumportrait.png'),
+
+    files = love.graphics.newImage('assets/fileplaceholder.png'),
+    txt = love.graphics.newImage('assets/txtplaceholder.png'),
+    image = love.graphics.newImage('assets/imageplaceholder.png'),
+    email = love.graphics.newImage('assets/emailplaceholder.png'),
+    shortcut = love.graphics.newImage('assets/Shortcut.png'),
 }

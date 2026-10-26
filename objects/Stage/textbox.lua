@@ -83,15 +83,17 @@ function Textbox:handleAction(step)
     if step[1] == 'OS' then
         if self.data then OSD = self.data end
         self:finish()
-        gotoRoom('OS')
+        gamestate()
         savestate()
+        gotoRoom('OS')
         movelock, inputlock = false, false
         return true
     elseif step[1] == 'Folders' then
         if self.data then FolderD = self.data end
         self:finish()
-        gotoRoom('Folders')
+        gamestate()
         savestate()
+        gotoRoom('Folders')
         return true
     elseif step[1] == 'PassTime' then
         if Day == 1 and Time == 2 then

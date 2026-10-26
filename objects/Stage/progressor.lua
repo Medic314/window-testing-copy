@@ -24,6 +24,7 @@ function Progressor:update(dt)
             ATDoorlock, TDoorlock, RDoorlock = false, false, false 
         end
         timePulse = false
+        notifpulse = timelistProper[Time]
         print(Day, Time)
     end
     if notifpulse then 

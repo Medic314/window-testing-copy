@@ -51,8 +51,7 @@ function OS:init()
     elseif OSD == 'Ts' then
         self.area:addGameObject('Button', 600, 200, {type='e'})
         self.area:addGameObject('Button', (200*1.5)-200, (200*1.5)-200, {type='m', mID = 'memo', password = 'tungsten'})
-        self.area:addGameObject('Button', (300*1.5)-200, (200*1.5)-200, {type='m', mID = 'memo', password = 'tungsten2'})
-        self.area:addGameObject('Button', (400*1.5)-200, (200*1.5)-200, {type='m', mID = 'memo', password = 'tungsten3'})
+        self.area:addGameObject('Button', (300*1.5)-200, (200*1.5)-200, {type='m', mID = 'email', password = 'tungsten2'})
     elseif OSD == 'R' then
         self.area:addGameObject('Button', 600, 200, {type='e'})
         self.area:addGameObject('Button', 200, 200, {type='g'})

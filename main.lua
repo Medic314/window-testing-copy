@@ -33,13 +33,14 @@ function gamestate()
     writeSaveData()
 end
 
-function love.load() 
+function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
     love.graphics.setLineStyle('rough')
     math.randomseed(os.time())
 
     ATDoorlock, TDoorlock, RDoorlock = false, false, false
     timelist = {'pre', 'rollcall', 'int', 'restperiod', 'night'}
+    timelistProper = {'Morning : 9:00 AM', 'Roll-Call : 9:20 AM', 'Search : 10:00 AM', 'Rest Period : 3:00 PM', 'Night : 11:00 PM'}
 
 
     local room_files = {}

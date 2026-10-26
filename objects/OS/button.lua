@@ -28,17 +28,19 @@ function Button:update(dt)
     if input:pressed('lmb') then
         self.collider = self.area.world:queryRectangleArea(self.x, self.y, self.w, self.h, {'Mouse'})
         if self.collider[1] then
-            if self.type == 'e' then
-                gotoRoom('Stage')
-            else
-                self.area:addGameObject(self.type .. 'Window', self.x, self.y, {
-                    mID = self.mID,
-                    memos = self.memos,
-                    memos2 = self.memos2,
-                    memos3 = self.memos3,
-                    password = self.password,
-                    passwordKey = self.passwordKey
-                })
+            if not hovering then
+                if self.type == 'e' then
+                    gotoRoom('Stage')
+                else
+                    self.area:addGameObject(self.type .. 'Window', self.x, self.y, {
+                        mID = self.mID,
+                        memos = self.memos,
+                        memos2 = self.memos2,
+                        memos3 = self.memos3,
+                        password = self.password,
+                        passwordKey = self.passwordKey
+                    })
+                end
             end
         end
     end

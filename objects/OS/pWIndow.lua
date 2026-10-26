@@ -3,8 +3,8 @@ pWindow = GameObject:extend()
 function pWindow:new(area, x, y, opts)
     pWindow.super.new(self, area, x, y, opts)
     self.layer = 'main layer'
-    self.x = gw/2
-    self.y = gh/2
+    self.x = GMX
+    self.y = GMY
     love.graphics.setFont(ST.f.alphabeta)
     self.charsize = 16
     self.bounds = {x = 800, y = 600}
@@ -20,7 +20,6 @@ function pWindow:new(area, x, y, opts)
     self.collider:setType('static')
     self.collider:setObject(self)
     self.collider.id = self.id
-
     updateFocus(self.id)
 end
 

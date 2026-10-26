@@ -3,9 +3,9 @@ tWindow = GameObject:extend()
 function tWindow:new(area, x, y, opts)
     tWindow.super.new(self, area, x, y, opts)
     self.layer = 'main layer'
-    self.x = gw/2
-    self.y = gh/2
     love.graphics.setFont(ST.f.alphabeta)
+    self.x = GMX
+    self.y = GMY
     self.charsize = 16
     self.bounds = {x = 800, y = 400}
     self.text = opts.text or TT.placeholder.ptext1
@@ -13,6 +13,7 @@ function tWindow:new(area, x, y, opts)
     self.textHitAreas = {}
     self.dragging = false
     self.scroll = 0
+    self.scrollTarget = 0
 
     self.title = opts.title or 'Window'
 
@@ -140,6 +141,11 @@ function tWindow:update(dt)
 
     if self.scroll > 0 then self.scroll = 0 end
     if self.scroll < -mScroll then self.scroll = -mScroll end
+    self.scrollTarget = math.max(-mScroll, math.min(0, self.scrollTarget))
+    if Focus == self.id then
+        self.scrollTarget = math.max(-mScroll, math.min(0, self.scrollTarget + input:getWheelY() * 48))
+    end
+    self.scroll = self.scroll + (self.scrollTarget - self.scroll) * (1 - math.exp(-dt * 18))
 
     if input:pressed('lmb') then
         if self.colliders[1] then
@@ -191,12 +197,6 @@ function tWindow:update(dt)
         if input:pressed('down') or input:down('down') then
             self.bounds.y = self.bounds.y + 16
             self.lines = self:wrapText(self.text, self.bounds.x)
-        end
-        if input:pressed('upscroll') then
-            self.scroll = self.scroll + 8*2
-        end
-        if input:pressed('downscroll') then
-            self.scroll = self.scroll - 8*2
         end
     end
     

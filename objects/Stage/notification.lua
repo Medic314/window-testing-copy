@@ -4,15 +4,15 @@ function Notification:new(area, x, y, opts)
     Notification.super.new(self, area, x, y, opts)
     opts = opts or {}
     self.layer = 'ui'
-    self.offsetX, self.offsetY = x or 0, y or 0
+    self.offsetX, self.offsetY = x or 0, y+15 or 15
     self.text = tostring(opts.text or opts.message or '')
-    self.font = ST.f.alphabeta
-    self.width = opts.width or 480
+    self.font = ST.f.alphabetaBigish
+    self.width = opts.width or 480*1.5
     self.padding = 18
     local _, lines = self.font:getWrap(self.text, self.width - 88)
     self.lines = lines
     self.height = math.max(72, #lines * self.font:getHeight() + self.padding * 2)
-    self.enterDuration = 0.4
+    self.enterDuration = 0.6
     self.holdDuration = opts.duration or 2.5
     self.exitDuration = 0.35
     self.elapsed = 0

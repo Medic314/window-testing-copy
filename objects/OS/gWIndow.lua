@@ -13,6 +13,7 @@ function gWindow:new(area, x, y, opts)
     self.lines = self:wrapText(self.text, self.bounds.x)
     self.dragging = false
     self.scroll = 0
+    self.scrollTarget = 0
 
     self.images = {ST.placeholder, ST.placeholder2, ST.placeholder3}
     self.selectedimage = 1
@@ -81,6 +82,11 @@ function gWindow:update(dt)
 
     if self.scroll > 0 then self.scroll = 0 end
     if self.scroll < -mScroll then self.scroll = -mScroll end
+    self.scrollTarget = math.max(-mScroll, math.min(0, self.scrollTarget))
+    if Focus == self.id then
+        self.scrollTarget = math.max(-mScroll, math.min(0, self.scrollTarget + input:getWheelY() * 48))
+    end
+    self.scroll = self.scroll + (self.scrollTarget - self.scroll) * (1 - math.exp(-dt * 18))
 
     if input:pressed('lmb') then
         if self.colliders[1] then
@@ -129,12 +135,6 @@ function gWindow:update(dt)
         if input:pressed('down') or input:down('down') then
             self.bounds.y = self.bounds.y + 16
             self.lines = self:wrapText(self.text, self.bounds.x)
-        end
-        if input:pressed('upscroll') then
-            self.scroll = self.scroll + 8*2
-        end
-        if input:pressed('downscroll') then
-            self.scroll = self.scroll - 8*2
         end
     end
     

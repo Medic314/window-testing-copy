@@ -20,9 +20,10 @@ function Mouse:update(dt)
     self.x, self.y = MX, MY
     GMX, GMY = self.x, self.y
     self.collider:setPosition(self.x, self.y)
-    if input:pressed('lmb') then
-        self.colliders = self.area.world:queryCircleArea(self.x, self.y, 2, {'Window'})
-        if self.colliders[1] then
+    self.colliders = self.area.world:queryCircleArea(self.x, self.y, 2, {'Window'})
+    if self.colliders[1] then
+        hovering = true
+        if input:pressed('lmb') then
             local focusedId = self.colliders[1].id
             local highestFocus = findFocus(focusedId)
             for i = 2, #self.colliders do
@@ -35,9 +36,11 @@ function Mouse:update(dt)
             end
             updateFocus(focusedId)
         end
+    else
+        hovering = false
     end
     if notifpulse then 
-        self.area:addGameObject('Notification', 0, 0, {text=notifpulse})
+        self.area:addGameObject('Notification', 0, 0, {text=notifpulse, delay = delay})
         notifpulse = nil
     end
 end

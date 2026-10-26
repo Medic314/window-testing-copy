@@ -147,7 +147,7 @@ end
 
 function prRooms:update(dt)
     if savepulse then
-        self.area:addGameObject('Notification', 0, 0, {text='Saved!'})
+        --self.area:addGameObject('Notification', 0, 0, {text='Saved!'})
         savepulse = false
     end
     if doorPulse then
@@ -174,6 +174,7 @@ function prRooms:update(dt)
     end
     if input:pressed('4') then
         --RDoorlock = not RDoorlock
+        Day, Time = 1, 1
         GameState = {}
         SaveState = {}
         UnlockedFiles = {}

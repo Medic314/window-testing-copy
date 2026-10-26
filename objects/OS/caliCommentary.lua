@@ -16,6 +16,13 @@ function CComment:new(area, x, y, opts)
     self.revealedChars = 0
     self.revealTimer = 0
     self.totalChars = 0
+    self.delay = opts.delay or true
+    local response = CT[self.input] or ''
+    if response[2] then
+        self.func = response[2]
+        response = response[1]
+    end
+    if self.delay == 'f' then if self.func then self.func() end end
 end
 
 function CComment:update(dt)
@@ -50,8 +57,9 @@ function CComment:update(dt)
     if input:pressed('lmb') then
         self.colliders = self.area.world:queryRectangleArea(self.x, self.y, self.w, self.h, {'Mouse'})
         if self.colliders[1] then
-            if self.func then self.func() end
+            if self.delay and self.delay ~= 'f' then if self.func then self.func() end end
             self.dead = true
+            delay = nil
         end
     end
 end

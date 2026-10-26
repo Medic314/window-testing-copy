@@ -47,6 +47,7 @@ function Input.new()
     self.functions = {}
     self.repeat_state = {}
     self.sequences = {}
+    self.wheel_y = 0
 
     -- Gamepads... currently only supports 1 gamepad, adding support for more is not that hard, just lazy.
     self.joysticks = love.joystick.getJoysticks()
@@ -231,6 +232,7 @@ function Input:update()
     self.prev_state = copy(self.state)
     self.state['wheelup'] = false
     self.state['wheeldown'] = false
+    self.wheel_y = 0
 
     for k, v in pairs(self.repeat_state) do
         if v then
@@ -276,8 +278,13 @@ function Input:mousereleased(x, y, button)
 end
 
 function Input:wheelmoved(x, y)
+    self.wheel_y = self.wheel_y + y
     if y > 0 then self.state['wheelup'] = true
     elseif y < 0 then self.state['wheeldown'] = true end
+end
+
+function Input:getWheelY()
+    return self.wheel_y
 end
 
 local button_to_gamepad = {a = 'fdown', y = 'fup', x = 'fleft', b = 'fright', back = 'back', guide = 'guide', start = 'start',

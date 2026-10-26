@@ -39,8 +39,8 @@ function mWindow:new(area, x, y, opts)
     opts = opts or {}
     mWindow.super.new(self, area, x, y, opts)
     self.layer = 'main layer'
-    self.x = gw/2
-    self.y = gh/2
+    self.x = GMX
+    self.y = GMY
     love.graphics.setFont(ST.f.alphabeta)
     self.charsize = 16
     self.bounds = {x = 800, y = 600}
@@ -92,6 +92,8 @@ function mWindow:new(area, x, y, opts)
     self.collider:setType('static')
     self.collider:setObject(self)
     self.scroll = 0
+    self.scrollTarget = 0
+    self.sidebarScrollTarget = 0
     self.collider.id = self.id
 
     updateFocus(self.id)
@@ -110,10 +112,26 @@ function mWindow:update(dt)
     local sidebarViewportHeight = self.bounds.y - 66
     local maxSidebarScroll = math.max(0, sidebarContentHeight - sidebarViewportHeight)
     self.sidebarScroll = math.max(-maxSidebarScroll, math.min(0, self.sidebarScroll))
+    self.sidebarScrollTarget = math.max(-maxSidebarScroll, math.min(0, self.sidebarScrollTarget))
     
     local mScroll = math.max(0, buttonH - VH)
     if self.scroll > 0 then self.scroll = 0 end
     if self.scroll < -mScroll then self.scroll = -mScroll end
+    self.scrollTarget = math.max(-mScroll, math.min(0, self.scrollTarget))
+
+    local overSidebar = sidebarWidth > 0 and GMX >= self.x and GMX <= self.x + sidebarWidth and GMY >= self.y
+    if Focus == self.id and not self.locked and self.colliders[1] then
+        local wheelY = input:getWheelY()
+        if overSidebar then
+            self.sidebarScrollTarget = math.max(-maxSidebarScroll, math.min(0, self.sidebarScrollTarget + wheelY * 32))
+        else
+            self.scrollTarget = math.max(-mScroll, math.min(0, self.scrollTarget + wheelY * 48))
+        end
+    end
+
+    local scrollBlend = 1 - math.exp(-dt * 18)
+    self.scroll = self.scroll + (self.scrollTarget - self.scroll) * scrollBlend
+    self.sidebarScroll = self.sidebarScroll + (self.sidebarScrollTarget - self.sidebarScroll) * scrollBlend
 
     self.hoveredMemo = nil
     self.hoveredMemoList = nil
@@ -168,7 +186,7 @@ function mWindow:update(dt)
     end
     
     if Focus == self.id then
-        if self.dragging then self.x, self.y = GMX-self.MX2, GMY-self.MY2 end
+        if self.dragging then if self.MX2 and self.MY2 then self.x, self.y = GMX-self.MX2, GMY-self.MY2 end end
         if self.locked then
             if self.selffocus then
                 if keyJustPressed('backspace') then
@@ -200,16 +218,6 @@ function mWindow:update(dt)
                     self.closebuttondown = 1
                 end
             end
-            local overSidebar = sidebarWidth > 0 and GMX >= self.x and GMX <= self.x + sidebarWidth and GMY >= self.y
-            if not self.locked and input:pressed('upscroll') then
-                if overSidebar then self.sidebarScroll = math.min(0, self.sidebarScroll + 32)
-                else self.scroll = self.scroll + 8*2 end
-            end
-            if not self.locked and input:pressed('downscroll') then
-                if overSidebar then self.sidebarScroll = math.max(-maxSidebarScroll, self.sidebarScroll - 32)
-                else self.scroll = self.scroll - 8*2 end
-            end
-
             if not self.locked and input:pressed('lmb') and sidebarWidth > 0 then
                 for index, list in ipairs(self.memoLists) do
                     local rowY = self.y + 48 + (index - 1) * (self.sidebarButtonHeight + self.sidebarButtonGap) + self.sidebarScroll
@@ -217,6 +225,7 @@ function mWindow:update(dt)
                         self.activeMemoList = index
                         self.memos = list.items
                         self.scroll = 0
+                        self.scrollTarget = 0
                         break
                     end
                 end
@@ -231,6 +240,7 @@ function mWindow:update(dt)
                         self.activeMemoList = index
                         self.memos = list.items
                         self.scroll = 0
+                        self.scrollTarget = 0
                         break
                     end
                 end

@@ -19,6 +19,7 @@ function gWindow:new(area, x, y, opts)
     self.selectedimage = 1
 
     self.gif = nil
+    self:startWindowAnimation()
     local apikey = 'ZFgQBkNpLLlmc1ahEWWiNYJNtFput9mA'
 
     local apiURL = 'https://api.giphy.com/v1/gifs/random?api_key=' .. apikey
@@ -73,6 +74,7 @@ function gWindow:wrapText(text, maxWidth)
 end
 
 function gWindow:update(dt)
+    if self:updateWindowAnimation(dt) then return end
     if Focus == self.id then self.layer = "main layer" else self.layer = 'background' end
     local font = love.graphics.getFont()
     local textH = #self.lines * font:getHeight()
@@ -101,7 +103,8 @@ function gWindow:update(dt)
     end
     if input:released('lmb') then
         if self.closebuttondown then
-            timer:after(0.2, function() self.closebuttondown = 0 self.dead = true end)
+            self.closebuttondown = 0
+            self:closeWindow()
         end
         if self.dragging then self.dragging = false end
     end
@@ -145,9 +148,14 @@ function gWindow:update(dt)
 end
 
 function gWindow:draw()
-    love.graphics.setColor(0, 0, 0)
-    love.graphics.rectangle('fill', self.x, self.y, self.bounds.x+25, self.bounds.y+16)
-    love.graphics.setColor(1, 1, 1)
+    local animated = self:beginWindowDraw()
+    local colors = pallete.blue
+    local width = self.bounds.x + 25
+    love.graphics.setColor(colors.panel)
+    love.graphics.rectangle('fill', self.x, self.y, width, self.bounds.y+16)
+    love.graphics.setColor(colors.primary)
+    love.graphics.rectangle('fill', self.x, self.y, width, 50)
+    love.graphics.setColor(colors.text)
     
     love.graphics.setFont(ST.f.alphabeta)
     local font = love.graphics.getFont()
@@ -161,13 +169,14 @@ function gWindow:draw()
         end
     end
 
-    love.graphics.rectangle('line', self.x, self.y, self.bounds.x+25, self.bounds.y+16)
+    love.graphics.setColor(colors.accent)
+    love.graphics.rectangle('line', self.x, self.y, width, self.bounds.y+16)
 
     love.graphics.rectangle('line', self.x, self.y, self.bounds.x+25, 50)
     local closeX, closeY = self.x + self.bounds.x + 25 - 46, self.y + 4
-    love.graphics.setColor(self.closebuttondown and {0.18, 0.20, 0.22} or {0.36, 0.40, 0.43})
+    love.graphics.setColor(self.closebuttondown and colors.dark or colors.accent)
     love.graphics.rectangle('fill', closeX, closeY, 42, 42)
-    love.graphics.setColor(1, 1, 1)
+    love.graphics.setColor(colors.text)
     love.graphics.setLineWidth(3)
     love.graphics.line(closeX + 13, closeY + 13, closeX + 29, closeY + 29)
     love.graphics.line(closeX + 29, closeY + 13, closeX + 13, closeY + 29)
@@ -181,7 +190,10 @@ function gWindow:draw()
         local mScroll = textH - VH
         local thumbY = trackY + (-self.scroll / mScroll) * (trackHeight - thumbHeight)
 
+        love.graphics.setColor(colors.accent)
         love.graphics.rectangle('line', trackX, trackY, 8, trackHeight)
         love.graphics.rectangle('fill', trackX, thumbY, 8, thumbHeight)
     end
+    love.graphics.setColor(colors.text)
+    self:endWindowDraw(animated)
 end

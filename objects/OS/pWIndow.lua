@@ -14,6 +14,7 @@ function pWindow:new(area, x, y, opts)
 
     self.images = opts.images or {ST.placeholder, ST.placeholder2, ST.placeholder3}
     self.selectedimage = opts.selectedimage or 1
+    self:startWindowAnimation()
 
     self.collider = self.area.world:newRectangleCollider(self.x, self.y-50, self.bounds.x, self.bounds.y+50)
     self.collider:setCollisionClass("Window")
@@ -24,6 +25,7 @@ function pWindow:new(area, x, y, opts)
 end
 
 function pWindow:update(dt)
+    if self:updateWindowAnimation(dt) then return end
     self.collider:setPosition(self.x+self.bounds.x/2, (self.y-50)+(self.bounds.y+50)/2)
     if Focus == self.id then self.layer = "foreground" else self.layer = 'main layer' end
     self.colliders = self.area.world:queryRectangleArea(self.x, self.y-50, self.bounds.x, self.bounds.y+50, {'Mouse'})
@@ -35,7 +37,8 @@ function pWindow:update(dt)
     end
     if input:released('lmb') then
         if self.closebuttondown then
-            timer:after(0.2, function() self.closebuttondown = 0 self.dead = true FocusHis[findFocus(self.id)] = nil end)
+            self.closebuttondown = 0
+            self:closeWindow()
         end
         if self.dragging then self.dragging = false end
     end
@@ -99,27 +102,24 @@ function pWindow:update(dt)
 end
 
 function pWindow:draw()
+    local animated = self:beginWindowDraw()
+    local colors = pallete.blue
     local width, height = self.bounds.x, self.bounds.y + 50
     local top = self.y - 50
     local titleHeight = 50
-    local panel = {0.08, 0.07, 0.09}
-    local pink = {0.23, 0.08, 0.25}
-    local lightPink = {0.32, 0.12, 0.36}
-    local white = {0.93, 0.90, 0.92}
-    local dark = {0.02, 0.02, 0.03}
 
-    love.graphics.setColor(panel)
+    love.graphics.setColor(colors.panel)
     love.graphics.rectangle('fill', self.x, top, width, height)
-    love.graphics.setColor(dark)
+    love.graphics.setColor(colors.dark)
     love.graphics.line(self.x, top + height - 1, self.x + width - 1, top + height - 1)
     love.graphics.line(self.x + width - 1, top, self.x + width - 1, top + height - 1)
-    love.graphics.setColor(0.28, 0.10, 0.17)
+    love.graphics.setColor(colors.accent)
     love.graphics.line(self.x + 1, top + 1, self.x + width - 2, top + 1)
     love.graphics.line(self.x + 1, top + 1, self.x + 1, top + height - 2)
 
-    if Focus == self.id then love.graphics.setColor(pink) else love.graphics.setColor({0.19, 0.11, 0.15}) end
+    if Focus == self.id then love.graphics.setColor(colors.primary) else love.graphics.setColor(colors.muted) end
     love.graphics.rectangle('fill', self.x + 3, top + 3, width - 6, titleHeight - 6)
-    love.graphics.setColor(white)
+    love.graphics.setColor(colors.text)
     love.graphics.setFont(ST.f.alphabeta)
     local titleFont = love.graphics.getFont()
     local _, titleLines = titleFont:getWrap(self.title, width - 70)
@@ -127,26 +127,26 @@ function pWindow:draw()
         love.graphics.print(titleLines[index], self.x + 10, top + 8 + (index - 1) * titleFont:getHeight())
     end
     local closeX, closeY = self.x + width - 46, top + 4
-    love.graphics.setColor(self.closebuttondown and pink or lightPink)
+    love.graphics.setColor(self.closebuttondown and colors.primary or colors.accent)
     love.graphics.rectangle('fill', closeX, closeY, 42, 42)
-    love.graphics.setColor(white)
+    love.graphics.setColor(colors.text)
     love.graphics.setLineWidth(3)
     love.graphics.line(closeX + 13, closeY + 13, closeX + 29, closeY + 29)
     love.graphics.line(closeX + 29, closeY + 13, closeX + 13, closeY + 29)
     love.graphics.setLineWidth(1)
     
     love.graphics.setFont(ST.f.alphabeta)
-    --love.graphics.setColor(lightPink)
     love.graphics.print('<', self.x + ((self.bounds.x-self.imagesize)/4), (self.y+self.bounds.y/2))
     love.graphics.print('>', self.x+self.bounds.x - ((self.bounds.x-self.imagesize)/4), (self.y+self.bounds.y/2))
 
-    love.graphics.setColor(white)
+    love.graphics.setColor(colors.text)
     local image = self.images[self.selectedimage]
     local imageScale = self.imagesize / math.max(image:getWidth(), image:getHeight())
     love.graphics.draw(image, (self.x+self.bounds.x/2)-(image:getWidth()*imageScale)/2, (self.y+self.bounds.y/2)-(image:getHeight()*imageScale)/2, 0, imageScale, imageScale)
-    love.graphics.setColor(pink)
+    love.graphics.setColor(colors.primary)
     love.graphics.circle('fill',self.x+self.bounds.x/2, self.y+self.bounds.y/2, 3)
 
     love.graphics.rectangle('line', self.x + 3, top + 3, width - 6, height - 6)
-    love.graphics.setColor(1, 1, 1)
+    love.graphics.setColor(colors.text)
+    self:endWindowDraw(animated)
 end

@@ -58,6 +58,7 @@ function mWindow:new(area, x, y, opts)
     self.passwordEntry = ''
     self.passwordError = false
     self.locked = self.password ~= nil and not (UnlockedFiles and UnlockedFiles[self.passwordKey])
+    self:startWindowAnimation()
     self.memoButtonHeight = 72
     self.memoButtonGap = 4
     self.memoPadding = 16
@@ -100,6 +101,7 @@ function mWindow:new(area, x, y, opts)
 end
 
 function mWindow:update(dt)
+    if self:updateWindowAnimation(dt) then return end
     local colliderWidth = self.bounds.x + 25
     local colliderHeight = self.bounds.y + 50
     if Focus == self.id then self.layer = "foreground" else self.layer = 'main layer' end
@@ -180,7 +182,8 @@ function mWindow:update(dt)
     end
     if input:released('lmb') then
         if self.closebuttondown then
-            timer:after(0.2, function() self.closebuttondown = 0 self.dead = true FocusHis[findFocus(self.id)] = nil end)
+            self.closebuttondown = 0
+            self:closeWindow()
         end
         if self.dragging then self.dragging = false end
     end
@@ -341,35 +344,31 @@ function mWindow:textinput(text)
 end
 
 function mWindow:draw()
+    local animated = self:beginWindowDraw()
     local width, height = self.bounds.x + 25, self.bounds.y + 50
     local top = self.y - 50
     local titleHeight = 50
-    local panel = {0.08, 0.09, 0.11}
-    local navy = self.mID == 'email' and {0.02, 0.24, 0.22} or {0.08, 0.18, 0.29}
-    local white = {0.88, 0.91, 0.93}
-    local dark = {0.10, 0.09, 0.12}
+    local colors = pallete[self.mID == 'email' and 'green' or 'blue']
 
-    love.graphics.setColor(panel)
+    love.graphics.setColor(colors.panel)
     love.graphics.rectangle('fill', self.x, top, width, height)
-    love.graphics.setColor(dark)
+    love.graphics.setColor(colors.dark)
     love.graphics.line(self.x, top + height - 1, self.x + width - 1, top + height - 1)
     love.graphics.line(self.x + width - 1, top, self.x + width - 1, top + height - 1)
-    love.graphics.setColor(white)
+    love.graphics.setColor(colors.accent)
     love.graphics.line(self.x + 1, top + 1, self.x + width - 2, top + 1)
     love.graphics.line(self.x + 1, top + 1, self.x + 1, top + height - 2)
 
-    if Focus == self.id then love.graphics.setColor(navy) else love.graphics.setColor(dark) end
+    if Focus == self.id then love.graphics.setColor(colors.primary) else love.graphics.setColor(colors.muted) end
     love.graphics.rectangle('fill', self.x + 3, top + 3, width - 6, titleHeight - 6)
-    love.graphics.setColor(white)
+    love.graphics.setColor(colors.text)
     love.graphics.setFont(ST.f.alphabeta)
     drawWrappedText(self.title, self.x + 10, top + 8, width - 70, titleHeight - 12)
     local closeX, closeY = self.x + width - 46, top + 4
-    local closeColor = self.mID == 'email' and {0.03, 0.48, 0.43} or {0.20, 0.42, 0.62}
     local closeHovered = Focus == self.id and GMX >= closeX and GMX <= closeX + 42 and GMY >= closeY and GMY <= closeY + 42
-    local closeHoverColor = self.mID == 'email' and {0.05, 0.58, 0.52} or {0.27, 0.52, 0.72}
-    love.graphics.setColor(self.closebuttondown and dark or (closeHovered and closeHoverColor or closeColor))
+    love.graphics.setColor(self.closebuttondown and colors.dark or (closeHovered and colors.accent or colors.primary))
     love.graphics.rectangle('fill', closeX, closeY, 42, 42)
-    love.graphics.setColor(white)
+    love.graphics.setColor(colors.text)
     love.graphics.setLineWidth(3)
     love.graphics.line(closeX + 13, closeY + 13, closeX + 29, closeY + 29)
     love.graphics.line(closeX + 29, closeY + 13, closeX + 13, closeY + 29)
@@ -377,25 +376,25 @@ function mWindow:draw()
 
     local sidebarWidth = self.mID == 'memo' and 224 or 0
     if self.mID == 'memo' then
-        love.graphics.setColor(0.05, 0.06, 0.08)
+        love.graphics.setColor(colors.dark)
         love.graphics.rectangle('fill', self.x + 3, self.y, sidebarWidth, self.bounds.y - 3)
-        love.graphics.setColor(0.72, 0.77, 0.81)
+        love.graphics.setColor(colors.accent)
         love.graphics.print('FILES', self.x + 18, self.y + 12)
         for index, list in ipairs(self.memoLists) do
             local rowY = self.y + 48 + (index - 1) * (self.sidebarButtonHeight + self.sidebarButtonGap) + self.sidebarScroll
             if rowY + self.sidebarButtonHeight >= self.y + 42 and rowY <= self.y + self.bounds.y - 8 then
                 if index == self.activeMemoList then
-                    love.graphics.setColor(navy)
+                    love.graphics.setColor(colors.primary)
                     love.graphics.rectangle('fill', self.x + 12, rowY, sidebarWidth - 24, self.sidebarButtonHeight)
-                    love.graphics.setColor(0.94, 0.96, 0.98)
+                    love.graphics.setColor(colors.text)
                     drawWrappedText('> ' .. list.title, self.x + 20, rowY + 3, sidebarWidth - 48, self.sidebarButtonHeight - 6)
                 elseif index == self.hoveredMemoList then
-                    love.graphics.setColor(0.13, 0.21, 0.29)
+                    love.graphics.setColor(colors.muted)
                     love.graphics.rectangle('fill', self.x + 12, rowY, sidebarWidth - 24, self.sidebarButtonHeight)
-                    love.graphics.setColor(0.88, 0.92, 0.95)
+                    love.graphics.setColor(colors.text)
                     drawWrappedText(list.title, self.x + 20, rowY + 3, sidebarWidth - 48, self.sidebarButtonHeight - 6)
                 else
-                    love.graphics.setColor(0.61, 0.67, 0.71)
+                    love.graphics.setColor(colors.accent)
                     drawWrappedText(list.title, self.x + 20, rowY + 3, sidebarWidth - 48, self.sidebarButtonHeight - 6)
                 end
             end
@@ -407,27 +406,27 @@ function mWindow:draw()
             local trackY = self.y + 48
             local thumbHeight = math.max(18, sidebarViewportHeight * sidebarViewportHeight / sidebarContentHeight)
             local thumbY = trackY + (-self.sidebarScroll / (sidebarContentHeight - sidebarViewportHeight)) * (sidebarViewportHeight - thumbHeight)
-            love.graphics.setColor(0.24, 0.27, 0.30)
+            love.graphics.setColor(colors.panel)
             love.graphics.rectangle('fill', trackX, trackY, 3, sidebarViewportHeight)
-            love.graphics.setColor(0.57, 0.63, 0.68)
+            love.graphics.setColor(colors.accent)
             love.graphics.rectangle('fill', trackX, thumbY, 3, thumbHeight)
         end
     else
-        love.graphics.setColor(0.02, 0.20, 0.19)
+        love.graphics.setColor(colors.dark)
         love.graphics.rectangle('fill', self.x + 3, self.y, self.bounds.x - 6, 42)
         for index = 1, math.min(3, #self.memoLists) do
             local tabX = self.x + self.emailTabPadding + (index - 1) * (self.emailTabWidth + self.emailTabGap)
             local tabY = self.y + 3
             local list = self.memoLists[index]
             if index == self.activeMemoList then
-                love.graphics.setColor(0.03, 0.45, 0.41)
+                love.graphics.setColor(colors.primary)
             elseif index == self.hoveredEmailTab then
-                love.graphics.setColor(0.05, 0.32, 0.30)
+                love.graphics.setColor(colors.muted)
             else
-                love.graphics.setColor(0.08, 0.13, 0.14)
+                love.graphics.setColor(colors.panel)
             end
             love.graphics.rectangle('fill', tabX, tabY, self.emailTabWidth, self.emailTabHeight)
-            love.graphics.setColor(index == self.activeMemoList and {0.94, 0.97, 0.96} or (index == self.hoveredEmailTab and {0.84, 0.91, 0.90} or {0.66, 0.74, 0.73}))
+            love.graphics.setColor(index == self.activeMemoList and colors.text or (index == self.hoveredEmailTab and colors.accent or colors.text))
             drawWrappedText(list.title, tabX + 8, tabY + 8, self.emailTabWidth - 16, self.emailTabHeight - 10)
         end
     end
@@ -439,31 +438,31 @@ function mWindow:draw()
         local currentButtonY = (buttonY + (index - 1) * (self.memoButtonHeight + self.memoButtonGap))+self.scroll
         if (currentButtonY + self.memoButtonHeight <= self.y + self.bounds.y) and (currentButtonY >= self.y + 58) then
             if self.mID == 'email' then
-                love.graphics.setColor(index == self.hoveredMemo and {0.18, 0.21, 0.23} or {0.12, 0.14, 0.16})
+                love.graphics.setColor(index == self.hoveredMemo and colors.muted or colors.panel)
                 love.graphics.rectangle('fill', buttonX, currentButtonY, buttonWidth, self.memoButtonHeight)
-                love.graphics.setColor(0.03, 0.45, 0.41)
+                love.graphics.setColor(colors.primary)
                 love.graphics.rectangle('fill', buttonX, currentButtonY, 6, self.memoButtonHeight)
-                love.graphics.setColor(0.68, 0.73, 0.75)
+                love.graphics.setColor(colors.accent)
                 drawWrappedText(memoField(memo, 'sender', 'Unknown sender'), buttonX + 18, currentButtonY + 2, buttonWidth - 36, 22)
-                love.graphics.setColor(0.91, 0.93, 0.94)
+                love.graphics.setColor(colors.text)
                 drawWrappedText(memoField(memo, 'title', 'No subject'), buttonX + 18, currentButtonY + 25, buttonWidth - 36, self.memoButtonHeight - 29)
-                love.graphics.setColor(0.58, 0.63, 0.65)
+                love.graphics.setColor(colors.accent)
             else
                 local image = memoImage(memo)
-                love.graphics.setColor(index == self.hoveredMemo and {0.17, 0.20, 0.24} or {0.12, 0.14, 0.17})
+                love.graphics.setColor(index == self.hoveredMemo and colors.muted or colors.panel)
                 love.graphics.rectangle('fill', buttonX, currentButtonY, buttonWidth, self.memoButtonHeight)
-                love.graphics.setColor(index == self.hoveredMemo and {0.50, 0.66, 0.75} or {0.30, 0.35, 0.39})
+                love.graphics.setColor(index == self.hoveredMemo and colors.accent or colors.primary)
                 love.graphics.rectangle('line', buttonX, currentButtonY, buttonWidth, self.memoButtonHeight)
-                love.graphics.setColor(0.50, 0.72, 0.88)
+                love.graphics.setColor(colors.accent)
                 love.graphics.print(image and '[IMG]' or '[TXT]', buttonX + 12, currentButtonY + 18)
-                love.graphics.setColor(0.91, 0.93, 0.95)
+                love.graphics.setColor(colors.text)
                 drawWrappedText(memoField(memo, 'title', 'Untitled'), buttonX + 112, currentButtonY + 4, buttonWidth - 124, self.memoButtonHeight - 8)
-                love.graphics.setColor(0.61, 0.66, 0.69)
+                love.graphics.setColor(colors.accent)
             end
         end
     end
 
-    love.graphics.setColor(dark)
+    love.graphics.setColor(colors.dark)
     love.graphics.rectangle('line', self.x + 3, top + 3, width - 6, height - 6)
 
     local buttonH = #self.memos * (self.memoButtonHeight + self.memoButtonGap)
@@ -481,21 +480,22 @@ function mWindow:draw()
         love.graphics.rectangle('fill', trackX, thumbY, 8, thumbHeight)
     end
     if self.locked then
-        love.graphics.setColor(0.04, 0.05, 0.07, 0.98)
+        love.graphics.setColor(colors.dark)
         love.graphics.rectangle('fill', self.x + 3, self.y + 3, self.bounds.x - 6, self.bounds.y - 6)
-        love.graphics.setColor(0.88, 0.91, 0.93)
+        love.graphics.setColor(colors.text)
         love.graphics.printf('PASSWORD REQUIRED', self.x + 24, self.y + self.bounds.y / 2 - 54, self.bounds.x - 48, 'center')
-        love.graphics.setColor(0.12, 0.14, 0.17)
+        love.graphics.setColor(colors.panel)
         local fieldWidth = math.min(360, self.bounds.x - 80)
         local fieldX = self.x + (self.bounds.x - fieldWidth) / 2
         local fieldY = self.y + self.bounds.y / 2 - 12
         love.graphics.rectangle('fill', fieldX, fieldY, fieldWidth, 40)
-        love.graphics.setColor(0.30, 0.35, 0.39)
+        love.graphics.setColor(colors.accent)
         love.graphics.rectangle('line', fieldX, fieldY, fieldWidth, 40)
-        love.graphics.setColor(self.passwordError and {0.95, 0.35, 0.32} or {0.88, 0.91, 0.93})
+        love.graphics.setColor(self.passwordError and colors.accent or colors.text)
         love.graphics.printf(string.rep('*', #self.passwordEntry), fieldX + 10, fieldY + 10, fieldWidth - 20, 'left')
-        love.graphics.setColor(self.passwordError and {0.95, 0.35, 0.32} or {0.61, 0.66, 0.69})
+        love.graphics.setColor(self.passwordError and colors.accent or colors.text)
         love.graphics.printf(self.passwordError and 'Incorrect password' or 'Type password, then press Enter', self.x + 24, fieldY + 52, self.bounds.x - 48, 'center')
     end
-    love.graphics.setColor(1, 1, 1)
+    love.graphics.setColor(colors.text)
+    self:endWindowDraw(animated)
 end

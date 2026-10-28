@@ -14,6 +14,7 @@ function tWindow:new(area, x, y, opts)
     self.dragging = false
     self.scroll = 0
     self.scrollTarget = 0
+    self:startWindowAnimation()
 
     self.title = opts.title or 'Window'
 
@@ -131,6 +132,7 @@ function tWindow:wrapText(text, maxWidth)
 end
 
 function tWindow:update(dt)
+    if self:updateWindowAnimation(dt) then return end
     self.collider:setPosition(self.x+(self.bounds.x+25)/2, self.y+(self.bounds.y+16)/2)
     if Focus == self.id then self.layer = "foreground" else self.layer = 'main layer' end
     local font = love.graphics.getFont()
@@ -163,7 +165,8 @@ function tWindow:update(dt)
     end
     if input:released('lmb') then
         if self.closebuttondown then
-            timer:after(0.2, function() self.closebuttondown = 0 self.dead = true FocusHis[findFocus(self.id)] = nil end)
+            self.closebuttondown = 0
+            self:closeWindow()
         end
         if self.dragging then self.dragging = false end
     end
@@ -218,26 +221,24 @@ function tWindow:update(dt)
 end
 
 function tWindow:draw()
+    local animated = self:beginWindowDraw()
+    local colors = pallete.blue
     local font = love.graphics.getFont()
     local width, height = self.bounds.x + 25, self.bounds.y + font:getHeight()
     local titleHeight = 50
-    local panel = {0.08, 0.09, 0.10}
-    local navy = {0.08, 0.18, 0.29}
-    local white = {0.88, 0.91, 0.93}
-    local dark = {0.02, 0.03, 0.04}
 
-    love.graphics.setColor(panel)
+    love.graphics.setColor(colors.panel)
     love.graphics.rectangle('fill', self.x, self.y, width, height)
-    love.graphics.setColor(dark)
+    love.graphics.setColor(colors.dark)
     love.graphics.line(self.x, self.y + height - 1, self.x + width - 1, self.y + height - 1)
     love.graphics.line(self.x + width - 1, self.y, self.x + width - 1, self.y + height - 1)
-    love.graphics.setColor(0.24, 0.19, 0.12)
+    love.graphics.setColor(colors.accent)
     love.graphics.line(self.x + 1, self.y + 1, self.x + width - 2, self.y + 1)
     love.graphics.line(self.x + 1, self.y + 1, self.x + 1, self.y + height - 2)
 
-    if Focus == self.id then love.graphics.setColor(navy) else love.graphics.setColor({0.10, 0.09, 0.12}) end
+    if Focus == self.id then love.graphics.setColor(colors.primary) else love.graphics.setColor(colors.muted) end
     love.graphics.rectangle('fill', self.x + 3, self.y + 3, width - 6, titleHeight - 6)
-    love.graphics.setColor(white)
+    love.graphics.setColor(colors.text)
     love.graphics.setFont(ST.f.alphabeta)
     local titleFont = love.graphics.getFont()
     local _, titleLines = titleFont:getWrap(self.title or 'Window', width - 70)
@@ -245,15 +246,15 @@ function tWindow:draw()
         love.graphics.print(titleLines[index], self.x + 10, self.y + 8 + (index - 1) * titleFont:getHeight())
     end
     local closeX, closeY = self.x + width - 46, self.y + 4
-    love.graphics.setColor(self.closebuttondown and dark or {0.16, 0.36, 0.56})
+    love.graphics.setColor(self.closebuttondown and colors.dark or colors.accent)
     love.graphics.rectangle('fill', closeX, closeY, 42, 42)
-    love.graphics.setColor(white)
+    love.graphics.setColor(colors.text)
     love.graphics.setLineWidth(3)
     love.graphics.line(closeX + 13, closeY + 13, closeX + 29, closeY + 29)
     love.graphics.line(closeX + 29, closeY + 13, closeX + 13, closeY + 29)
     love.graphics.setLineWidth(1)
 
-    love.graphics.setColor(0.88, 0.91, 0.93)
+    love.graphics.setColor(colors.text)
     love.graphics.setFont(ST.f.alphabeta)
     local textH = #self.lines * font:getHeight()
     local VH = self.bounds.y - 50
@@ -280,12 +281,12 @@ function tWindow:draw()
                 local wordWidth = font:getWidth(word.text)
                 if word.red then
                     if hoveredLine then
-                        love.graphics.setColor(0.31, 0.45, 0.62)
+                        love.graphics.setColor(colors.primary)
                     else
-                        love.graphics.setColor(0.31, 0.65, 0.76)
+                        love.graphics.setColor(colors.accent)
                     end
                 else
-                    love.graphics.setColor(0.88, 0.91, 0.93)
+                    love.graphics.setColor(colors.text)
                 end
                 love.graphics.print(word.text, lineX, liney)
                 if word.clickable then
@@ -302,9 +303,9 @@ function tWindow:draw()
         end
     end
     
-    love.graphics.setColor(dark)
+    love.graphics.setColor(colors.dark)
     love.graphics.rectangle('line', self.x + 3, self.y + 3, width - 6, height - 6)
-    love.graphics.setColor(1, 1, 1)
+    love.graphics.setColor(colors.text)
     if textH > VH then
         local trackX = self.x + self.bounds.x + 8
         local trackY = self.y + 50
@@ -313,9 +314,10 @@ function tWindow:draw()
         local mScroll = textH - VH
         local thumbY = trackY + (-self.scroll / mScroll) * (trackHeight - thumbHeight)
         
-        love.graphics.setColor(navy)
+        love.graphics.setColor(colors.primary)
         love.graphics.rectangle('line', trackX, trackY, 8, trackHeight)
         love.graphics.rectangle('fill', trackX, thumbY, 8, thumbHeight)
-        love.graphics.setColor(1, 1, 1)
+        love.graphics.setColor(colors.text)
     end
+    self:endWindowDraw(animated)
 end

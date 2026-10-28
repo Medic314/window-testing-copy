@@ -1,4 +1,38 @@
+function hextorgb(hex)
+    hex = hex:gsub("#","")
+    return tonumber("0x"..hex:sub(1,2))/255, tonumber("0x"..hex:sub(3,4))/255, tonumber("0x"..hex:sub(5,6))/255
+end
+
+pallete = {
+    blue = {
+        panel = {0.08, 0.09, 0.10},
+        muted = {0.14, 0.20, 0.29},
+        primary = {0.08, 0.18, 0.29},
+        accent = {0.20, 0.48, 0.68},
+        
+        
+        dark = {0.02, 0.03, 0.04},
+        text = {1, 1, 1},
+    },
+    green = {
+        panel = {0.06, 0.12, 0.12},
+        muted = {0.13, 0.25, 0.24},
+        primary = {0.02, 0.30, 0.27},
+        accent = {0.04, 0.48, 0.42},
+
+        --[[panel = {hextorgb("4B7F52")},
+        muted = {hextorgb("B6F9C9")},
+        primary = {hextorgb("7DD181")},
+        accent = {hextorgb("96E8BC")},]]
+        
+        
+        dark = {0.02, 0.06, 0.06},
+        text = {1, 1, 1},
+    },
+}
+
 OS = Object:extend()
+
 
 function OS:new()
     Debug_Vision = true
@@ -7,6 +41,7 @@ function OS:new()
     self.area:addPhysicsWorld()
     self:init()
     CamX, CamY = gw/2,gh/2
+    print(hextorgb("#456990"))
 end
 
 function OS:init()
@@ -59,6 +94,17 @@ function OS:init()
     
     self.taskbar = self.area:addGameObject('Taskbar', 0, 0)
     self.area:addGameObject('Transition', 0, 0, {type = 'room'})
+
+    effect = Moonshine(Moonshine.effects.filmgrain)
+                    .chain(Moonshine.effects.crt)
+                    .chain(Moonshine.effects.scanlines)
+    effect.filmgrain.size = 4
+    effect.filmgrain.opacity = 0.1
+    effect.crt.distortionFactor = {1.02, 1.02}
+    effect.scanlines.width = 1
+    effect.scanlines.thickness = 0.2
+    effect.scanlines.frequency = gh/2
+    effect.scanlines.opacity = 0.3
 end
 
 function findFocus(id)
@@ -95,18 +141,23 @@ end
 function OS:draw()
     love.graphics.setCanvas(self.main_canvas)
     love.graphics.clear()
-    
-    camera:attach(CamX, CamY, gw, gh)
-    self.area:draw()
-    camera:draw()
 
-    camera:detach()
-    self.taskbar:draw()
+    effect.draw(function()
+        camera:attach(CamX, CamY, gw, gh)
+        self.area:draw()
+        camera:draw()
+        
+        camera:detach()
+        self.taskbar:draw()
+    end)
     
     love.graphics.setCanvas()
-
+    
     love.graphics.setColor(255, 255, 255, 255)
     love.graphics.setBlendMode('alpha', 'premultiplied')
     love.graphics.draw(self.main_canvas, 0, 0, 0, sx, sy)
     love.graphics.setBlendMode('alpha')
+    --[[effect(function()
+      love.graphics.rectangle("fill", 0, 0, gw, gh)
+    end)]]
 end
